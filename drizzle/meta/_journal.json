@@ -1,0 +1,34 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1748405503809,
+      "tag": "0000_fuzzy_randall",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1758863991284,
+      "tag": "0001_wise_rockslide",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1765756194694,
+      "tag": "0002_burly_dazzler",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1765761948160,
+      "tag": "0003_colossal_colonel_america",
+      "breakpoints": true
+    }
+  ]
+}
