@@ -109,7 +109,7 @@ export async function GET(req: NextRequest) {
       source: article.source || null,
       word_count: article.word_count || null,
       html: article.html || null,
-      followUpQuestions: '[]',
+      followUpQuestions: [],
       hitCount: 1,
     });
 
@@ -157,7 +157,7 @@ export async function POST(req: NextRequest) {
       await db
         .update(articleCache)
         .set({
-          followUpQuestions: JSON.stringify(followUpQuestions),
+          followUpQuestions: followUpQuestions,
         })
         .where(eq(articleCache.url, url));
     }

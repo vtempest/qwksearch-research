@@ -538,55 +538,14 @@ const ArticleExtractPanel: React.FC<ArticleExtractPanelProps> = ({
                       )}
                     </div>
                   </div>
-                  );
-
-                  // Desktop: Fixed panel on right side
-                  if (isDesktop && isOpen) {
-    return (
-                  <div className="fixed right-0 top-0 bottom-0 w-[500px] z-40 border-l border-light-200 dark:border-dark-200">
-                    {renderPanelContent()}
-                  </div>
-                  );
-  }
-
-                  // Mobile: Slide-in modal
-                  return (
-                  <Transition appear show={isOpen} as={Fragment}>
-                    <Dialog as="div" className="relative z-50" onClose={onClose}>
-                      <TransitionChild
-                        as={Fragment}
-                        enter="ease-out duration-300"
-                        enterFrom="opacity-0"
-                        enterTo="opacity-100"
-                        leave="ease-in duration-200"
-                        leaveFrom="opacity-100"
-                        leaveTo="opacity-0"
-                      >
-                        <div className="fixed inset-0 bg-black/25" />
-                      </TransitionChild>
-
-                      <div className="fixed inset-0 overflow-hidden">
-                        <div className="absolute inset-0 overflow-hidden">
-                          <div className="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10">
-                            <TransitionChild
-                              as={Fragment}
-                              enter="transform transition ease-in-out duration-300"
-                              enterFrom="translate-x-full"
-                              enterTo="translate-x-0"
-                              leave="transform transition ease-in-out duration-300"
-                              leaveFrom="translate-x-0"
-                              leaveTo="translate-x-full"
-                            >
-                              <DialogPanel className="pointer-events-auto w-screen max-w-md">
-                                {renderPanelContent()}
-                              </DialogPanel>
-                            </TransitionChild>
-                          </div>
-                        </div>
-                      </div>
-                    </Dialog>
-                  </Transition>
-                  );
+                </DialogPanel>
+              </TransitionChild>
+            </div>
+          </div>
+        </div>
+      </Dialog>
+    </Transition>
+  );
 };
 
-                  export default ArticleExtractPanel;
+export default ArticleExtractPanel;
