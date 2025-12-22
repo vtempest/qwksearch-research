@@ -112,3 +112,24 @@ export const verification = sqliteTable('verification', {
     mode: 'timestamp',
   }),
 });
+
+export const favorites = sqliteTable('favorites', {
+  id: integer('id').primaryKey(),
+  userId: text('userId')
+    .notNull()
+    .references(() => user.id),
+  url: text('url').notNull(),
+  title: text('title'),
+  cite: text('cite'),
+  author: text('author'),
+  author_cite: text('author_cite'),
+  date: text('date'),
+  source: text('source'),
+  word_count: integer('word_count'),
+  html: text('html'),
+  createdAt: integer('createdAt', {
+    mode: 'timestamp',
+  })
+    .notNull()
+    .default(sql`(unixepoch())`),
+});
