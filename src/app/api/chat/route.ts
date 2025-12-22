@@ -192,11 +192,12 @@ const handleHistorySave = async (
       })
       .execute();
   } else if (JSON.stringify(chat.files ?? []) != JSON.stringify(fileData)) {
-    db.update(chats)
+    await db.update(chats)
       .set({
         files: files.map(getFileDetails),
       })
-      .where(eq(chats.id, message.chatId));
+      .where(eq(chats.id, message.chatId))
+      .execute();
   }
 
   const messageExists = await db.query.messages.findFirst({
@@ -299,7 +300,7 @@ export const POST = async (req: Request) => {
     const encoder = new TextEncoder();
 
     handleEmitterEvents(stream, writer, encoder, message.chatId, userId);
-    handleHistorySave(message, humanMessageId, body.focusMode, body.files, userId);
+    await handleHistorySave(message, humanMessageId, body.focusMode, body.files, userId);
 
     return new Response(responseStream.readable, {
       headers: {
