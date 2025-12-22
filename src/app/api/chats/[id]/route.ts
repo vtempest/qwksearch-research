@@ -13,14 +13,19 @@ export const GET = async (
     // Require authentication
     const userId = await requireUserId();
 
+    console.log('[GET /api/chats/[id]] Looking for chatId:', id, 'userId:', userId);
+
     // Security: Only allow access to user's own chats
     const chatExists = await db.query.chats.findFirst({
       where: and(eq(chats.id, id), eq(chats.userId, userId)),
     });
 
     if (!chatExists) {
+      console.log('[GET /api/chats/[id]] Chat not found for chatId:', id, 'userId:', userId);
       return Response.json({ message: 'Chat not found' }, { status: 404 });
     }
+
+    console.log('[GET /api/chats/[id]] Chat found:', id);
 
     // Get messages for this chat (already scoped by userId through chat ownership)
     const chatMessages = await db.query.messages.findMany({
