@@ -1,4 +1,4 @@
-import db from '@/lib/db';
+import { db } from '@/lib/db';
 import { favorites } from '@/lib/db/schema';
 import { eq, and } from 'drizzle-orm';
 import { requireUserId } from '@/lib/auth/session';

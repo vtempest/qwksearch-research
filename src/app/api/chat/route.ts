@@ -2,7 +2,7 @@ import crypto from 'crypto';
 import { AIMessage, BaseMessage, HumanMessage } from '@langchain/core/messages';
 import { Document } from '@langchain/core/documents';
 import { EventEmitter } from 'stream';
-import db from '@/lib/db';
+import { db } from '@/lib/db';
 import { chats, messages as messagesSchema } from '@/lib/db/schema';
 import { and, eq, gt } from 'drizzle-orm';
 import { getFileDetails } from '@/lib/utils/files';

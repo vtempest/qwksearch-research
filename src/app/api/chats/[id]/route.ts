@@ -1,4 +1,4 @@
-import db from '@/lib/db';
+import { db } from '@/lib/db';
 import { chats, messages } from '@/lib/db/schema';
 import { and, eq } from 'drizzle-orm';
 import { requireUserId } from '@/lib/auth/session';
