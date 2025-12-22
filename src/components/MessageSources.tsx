@@ -9,9 +9,12 @@ import {
 import { Document } from '@langchain/core/documents';
 import { File } from 'lucide-react';
 import { Fragment, useState } from 'react';
+import ArticleExtractPanel from './ArticleExtractPanel';
 
 const MessageSources = ({ sources }: { sources: Document[] }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isExtractPanelOpen, setIsExtractPanelOpen] = useState(false);
+  const [selectedUrl, setSelectedUrl] = useState('');
 
   const closeModal = () => {
     setIsDialogOpen(false);
@@ -23,15 +26,22 @@ const MessageSources = ({ sources }: { sources: Document[] }) => {
     document.body.classList.add('overflow-hidden-scrollable');
   };
 
+  const handleSourceClick = (e: React.MouseEvent, url: string) => {
+    e.preventDefault();
+    setSelectedUrl(url);
+    setIsExtractPanelOpen(true);
+  };
+
   return (
-    <div className="grid grid-cols-2 lg:grid-cols-4 gap-2">
-      {sources.slice(0, 3).map((source, i) => (
-        <a
-          className="bg-light-100 hover:bg-light-200 dark:bg-dark-100 dark:hover:bg-dark-200 transition duration-200 rounded-lg p-3 flex flex-col space-y-2 font-medium"
-          key={i}
-          href={source.metadata.url}
-          target="_blank"
-        >
+    <>
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-2">
+        {sources.slice(0, 3).map((source, i) => (
+          <a
+            className="bg-light-100 hover:bg-light-200 dark:bg-dark-100 dark:hover:bg-dark-200 transition duration-200 rounded-lg p-3 flex flex-col space-y-2 font-medium cursor-pointer"
+            key={i}
+            href={source.metadata.url}
+            onClick={(e) => handleSourceClick(e, source.metadata.url)}
+          >
           <p className="dark:text-white text-xs overflow-hidden whitespace-nowrap text-ellipsis">
             {source.metadata.title}
           </p>
@@ -112,10 +122,10 @@ const MessageSources = ({ sources }: { sources: Document[] }) => {
                   <div className="grid grid-cols-2 gap-2 overflow-auto max-h-[300px] mt-2 pr-2">
                     {sources.map((source, i) => (
                       <a
-                        className="bg-light-secondary hover:bg-light-200 dark:bg-dark-secondary dark:hover:bg-dark-200 border border-light-200 dark:border-dark-200 transition duration-200 rounded-lg p-3 flex flex-col space-y-2 font-medium"
+                        className="bg-light-secondary hover:bg-light-200 dark:bg-dark-secondary dark:hover:bg-dark-200 border border-light-200 dark:border-dark-200 transition duration-200 rounded-lg p-3 flex flex-col space-y-2 font-medium cursor-pointer"
                         key={i}
                         href={source.metadata.url}
-                        target="_blank"
+                        onClick={(e) => handleSourceClick(e, source.metadata.url)}
                       >
                         <p className="dark:text-white text-xs overflow-hidden whitespace-nowrap text-ellipsis">
                           {source.metadata.title}
@@ -156,7 +166,14 @@ const MessageSources = ({ sources }: { sources: Document[] }) => {
           </div>
         </Dialog>
       </Transition>
-    </div>
+
+      <ArticleExtractPanel
+        isOpen={isExtractPanelOpen}
+        onClose={() => setIsExtractPanelOpen(false)}
+        url={selectedUrl}
+        searchText=""
+      />
+    </>
   );
 };
 
