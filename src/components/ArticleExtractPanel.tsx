@@ -30,6 +30,8 @@ interface Article {
   date?: string;
   source?: string;
   word_count?: number;
+  followUpQuestions?: string[];
+  qaHistory?: Array<{ question: string; answer: string }>;
 }
 
 interface ChatMessage {
@@ -69,6 +71,17 @@ const ArticleExtractPanel: React.FC<ArticleExtractPanelProps> = ({
   const [followupError, setFollowupError] = useState('');
   const [isFavorited, setIsFavorited] = useState(false);
   const [isLoadingFavorite, setIsLoadingFavorite] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(false);
+
+  // Track window width for desktop/mobile layout
+  useEffect(() => {
+    const checkDesktop = () => {
+      setIsDesktop(window.innerWidth > 800);
+    };
+    checkDesktop();
+    window.addEventListener('resize', checkDesktop);
+    return () => window.removeEventListener('resize', checkDesktop);
+  }, []);
 
   // Extract URL content when panel opens
   useEffect(() => {
@@ -80,14 +93,21 @@ const ArticleExtractPanel: React.FC<ArticleExtractPanelProps> = ({
   const extractURL = async () => {
     setIsLoadingExtract(true);
     try {
+      // Use cache API instead of external API
       const response = await fetch(
-        `https://app.qwksearch.com/api/extract?url=${encodeURIComponent(url)}`
+        `/api/article?url=${encodeURIComponent(url)}`
       );
       if (!response.ok) {
         throw new Error('Failed to extract URL');
       }
       const data = await response.json();
-      setExtractedArticle(data);
+      setExtractedArticle(data.article);
+
+      // Load cached follow-up questions if available
+      if (data.article.followUpQuestions && data.article.followUpQuestions.length > 0) {
+        setFollowupQuestions(data.article.followUpQuestions);
+      }
+
       // Check if this article is already favorited
       checkIfFavorited(url);
     } catch (error) {
@@ -199,7 +219,8 @@ const ArticleExtractPanel: React.FC<ArticleExtractPanelProps> = ({
       const data = await response.json();
 
       if (isQuestion) {
-        setAiResponse(data.content || '');
+        const aiAnswer = data.content || '';
+        setAiResponse(aiAnswer);
         setChatHistory((prev) => [
           ...prev,
           {
@@ -209,12 +230,42 @@ const ArticleExtractPanel: React.FC<ArticleExtractPanelProps> = ({
           },
           {
             role: 'assistant',
-            content: data.content || '',
+            content: aiAnswer,
             time: new Date().toISOString(),
           },
         ]);
+
+        // Store Q&A pair in cache
+        try {
+          await fetch('/api/article', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              url,
+              question: userPrompt,
+              answer: aiAnswer,
+            }),
+          });
+        } catch (error) {
+          console.error('Error storing Q&A in cache:', error);
+        }
       } else {
-        setFollowupQuestions(data.extract || []);
+        const questions = data.extract || [];
+        setFollowupQuestions(questions);
+
+        // Store follow-up questions in cache
+        try {
+          await fetch('/api/article', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              url,
+              followUpQuestions: questions,
+            }),
+          });
+        } catch (error) {
+          console.error('Error storing follow-up questions in cache:', error);
+        }
       }
     } catch (error) {
       console.error('Error calling language API:', error);
@@ -251,50 +302,24 @@ const ArticleExtractPanel: React.FC<ArticleExtractPanelProps> = ({
     // For now, just a placeholder
   };
 
-  return (
-    <Transition appear show={isOpen} as={Fragment}>
-      <Dialog as="div" className="relative z-50" onClose={onClose}>
-        <TransitionChild
-          as={Fragment}
-          enter="ease-out duration-300"
-          enterFrom="opacity-0"
-          enterTo="opacity-100"
-          leave="ease-in duration-200"
-          leaveFrom="opacity-100"
-          leaveTo="opacity-0"
+  // Shared panel content component
+  const renderPanelContent = () => (
+    <div className="flex h-full flex-col bg-white dark:bg-dark-secondary shadow-xl">
+      {/* Header */}
+      <div className="flex items-center justify-between bg-light-100 dark:bg-dark-100 px-4 py-3 border-b border-light-200 dark:border-dark-200">
+        <h2 className="text-lg font-semibold dark:text-white">
+          Article Extract
+        </h2>
+        <button
+          onClick={onClose}
+          className="rounded-md p-1 hover:bg-light-200 dark:hover:bg-dark-200 transition-colors"
         >
-          <div className="fixed inset-0 bg-black/25" />
-        </TransitionChild>
+          <X className="h-5 w-5 dark:text-white" />
+        </button>
+      </div>
 
-        <div className="fixed inset-0 overflow-hidden">
-          <div className="absolute inset-0 overflow-hidden">
-            <div className="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10">
-              <TransitionChild
-                as={Fragment}
-                enter="transform transition ease-in-out duration-300"
-                enterFrom="translate-x-full"
-                enterTo="translate-x-0"
-                leave="transform transition ease-in-out duration-300"
-                leaveFrom="translate-x-0"
-                leaveTo="translate-x-full"
-              >
-                <DialogPanel className="pointer-events-auto w-screen max-w-md">
-                  <div className="flex h-full flex-col bg-white dark:bg-dark-secondary shadow-xl">
-                    {/* Header */}
-                    <div className="flex items-center justify-between bg-light-100 dark:bg-dark-100 px-4 py-3 border-b border-light-200 dark:border-dark-200">
-                      <h2 className="text-lg font-semibold dark:text-white">
-                        Article Extract
-                      </h2>
-                      <button
-                        onClick={onClose}
-                        className="rounded-md p-1 hover:bg-light-200 dark:hover:bg-dark-200 transition-colors"
-                      >
-                        <X className="h-5 w-5 dark:text-white" />
-                      </button>
-                    </div>
-
-                    {/* Content */}
-                    <div className="flex-1 overflow-hidden">
+      {/* Content */}
+      <div className="flex-1 overflow-hidden">
                       {isLoadingExtract ? (
                         <div className="flex justify-center items-center h-full">
                           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
@@ -489,8 +514,49 @@ const ArticleExtractPanel: React.FC<ArticleExtractPanelProps> = ({
                           </Panel>
                         </Group>
                       )}
-                    </div>
-                  </div>
+      </div>
+    </div>
+  );
+
+  // Desktop: Fixed panel on right side
+  if (isDesktop && isOpen) {
+    return (
+      <div className="fixed right-0 top-0 bottom-0 w-[500px] z-40 border-l border-light-200 dark:border-dark-200">
+        {renderPanelContent()}
+      </div>
+    );
+  }
+
+  // Mobile: Slide-in modal
+  return (
+    <Transition appear show={isOpen} as={Fragment}>
+      <Dialog as="div" className="relative z-50" onClose={onClose}>
+        <TransitionChild
+          as={Fragment}
+          enter="ease-out duration-300"
+          enterFrom="opacity-0"
+          enterTo="opacity-100"
+          leave="ease-in duration-200"
+          leaveFrom="opacity-100"
+          leaveTo="opacity-0"
+        >
+          <div className="fixed inset-0 bg-black/25" />
+        </TransitionChild>
+
+        <div className="fixed inset-0 overflow-hidden">
+          <div className="absolute inset-0 overflow-hidden">
+            <div className="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10">
+              <TransitionChild
+                as={Fragment}
+                enter="transform transition ease-in-out duration-300"
+                enterFrom="translate-x-full"
+                enterTo="translate-x-0"
+                leave="transform transition ease-in-out duration-300"
+                leaveFrom="translate-x-0"
+                leaveTo="translate-x-full"
+              >
+                <DialogPanel className="pointer-events-auto w-screen max-w-md">
+                  {renderPanelContent()}
                 </DialogPanel>
               </TransitionChild>
             </div>
