@@ -1,6 +1,6 @@
 import { betterAuth } from 'better-auth';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
-import db from './db';
+import { db } from './db';
 import { oneTap, openAPI, magicLink } from "better-auth/plugins";
 import * as schema from './db/schema';
 
