@@ -7,6 +7,7 @@ import {
   Bot,
   MessageCircleQuestion,
   X,
+  Star,
 } from 'lucide-react';
 import {
   Dialog,
@@ -21,6 +22,13 @@ interface Article {
   cite?: string;
   title?: string;
   url?: string;
+  author?: string;
+  author_cite?: string;
+  author_short?: string;
+  author_type?: string;
+  date?: string;
+  source?: string;
+  word_count?: number;
 }
 
 interface ChatMessage {
@@ -58,6 +66,8 @@ const ArticleExtractPanel: React.FC<ArticleExtractPanelProps> = ({
   const [aiError, setAiError] = useState('');
   const [followupQuestions, setFollowupQuestions] = useState<string[]>([]);
   const [followupError, setFollowupError] = useState('');
+  const [isFavorited, setIsFavorited] = useState(false);
+  const [isLoadingFavorite, setIsLoadingFavorite] = useState(false);
 
   // Extract URL content when panel opens
   useEffect(() => {
@@ -77,11 +87,74 @@ const ArticleExtractPanel: React.FC<ArticleExtractPanelProps> = ({
       }
       const data = await response.json();
       setExtractedArticle(data);
+      // Check if this article is already favorited
+      checkIfFavorited(url);
     } catch (error) {
       console.error('Error extracting URL:', error);
       setAiError('Failed to extract URL content');
     } finally {
       setIsLoadingExtract(false);
+    }
+  };
+
+  const checkIfFavorited = async (articleUrl: string) => {
+    try {
+      const response = await fetch('/api/favorites');
+      if (response.ok) {
+        const data = await response.json();
+        const isFav = data.favorites?.some(
+          (fav: any) => fav.url === articleUrl
+        );
+        setIsFavorited(isFav);
+      }
+    } catch (error) {
+      console.error('Error checking favorite status:', error);
+    }
+  };
+
+  const toggleFavorite = async () => {
+    if (!extractedArticle) return;
+
+    setIsLoadingFavorite(true);
+    try {
+      if (isFavorited) {
+        // Remove from favorites
+        const response = await fetch(
+          `/api/favorites?url=${encodeURIComponent(extractedArticle.url || url)}`,
+          {
+            method: 'DELETE',
+          }
+        );
+        if (response.ok) {
+          setIsFavorited(false);
+        }
+      } else {
+        // Add to favorites
+        const response = await fetch('/api/favorites', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            url: extractedArticle.url || url,
+            title: extractedArticle.title,
+            cite: extractedArticle.cite,
+            author: extractedArticle.author,
+            author_cite: extractedArticle.author_cite,
+            date: extractedArticle.date,
+            source: extractedArticle.source,
+            word_count: extractedArticle.word_count,
+            html: extractedArticle.html,
+          }),
+        });
+        if (response.ok) {
+          setIsFavorited(true);
+        }
+      }
+    } catch (error) {
+      console.error('Error toggling favorite:', error);
+    } finally {
+      setIsLoadingFavorite(false);
     }
   };
 
@@ -333,9 +406,63 @@ const ArticleExtractPanel: React.FC<ArticleExtractPanelProps> = ({
                           {/* Extracted Article */}
                           {extractedArticle && (
                             <div className="mt-4 border-t border-light-200 dark:border-dark-200 pt-4">
-                              <h3 className="font-semibold mb-2 dark:text-white">
-                                {extractedArticle.title || 'Extracted Content'}
-                              </h3>
+                              {/* Title and Favorite Button */}
+                              <div className="flex items-start justify-between mb-2">
+                                <h3 className="font-semibold dark:text-white flex-1">
+                                  {extractedArticle.title || 'Extracted Content'}
+                                </h3>
+                                <button
+                                  onClick={toggleFavorite}
+                                  disabled={isLoadingFavorite}
+                                  className="ml-2 p-1 hover:bg-light-200 dark:hover:bg-dark-200 rounded transition-colors disabled:opacity-50"
+                                  title={isFavorited ? 'Remove from favorites' : 'Add to favorites'}
+                                >
+                                  <Star
+                                    className={`h-5 w-5 ${
+                                      isFavorited
+                                        ? 'fill-yellow-400 text-yellow-400'
+                                        : 'text-gray-400'
+                                    }`}
+                                  />
+                                </button>
+                              </div>
+
+                              {/* Citation Information */}
+                              {extractedArticle.cite && (
+                                <div className="mb-3 text-sm text-gray-600 dark:text-gray-400">
+                                  <p className="italic">{extractedArticle.cite}</p>
+                                </div>
+                              )}
+
+                              {/* Metadata */}
+                              <div className="mb-3 text-xs text-gray-500 dark:text-gray-500 space-y-1">
+                                {extractedArticle.author && (
+                                  <p>
+                                    <span className="font-semibold">Author:</span>{' '}
+                                    {extractedArticle.author}
+                                  </p>
+                                )}
+                                {extractedArticle.date && (
+                                  <p>
+                                    <span className="font-semibold">Date:</span>{' '}
+                                    {extractedArticle.date}
+                                  </p>
+                                )}
+                                {extractedArticle.source && (
+                                  <p>
+                                    <span className="font-semibold">Source:</span>{' '}
+                                    {extractedArticle.source}
+                                  </p>
+                                )}
+                                {extractedArticle.word_count && (
+                                  <p>
+                                    <span className="font-semibold">Word Count:</span>{' '}
+                                    {extractedArticle.word_count.toLocaleString()}
+                                  </p>
+                                )}
+                              </div>
+
+                              {/* Article HTML Content */}
                               <div
                                 className="prose dark:prose-invert max-w-none text-sm"
                                 dangerouslySetInnerHTML={{
