@@ -133,3 +133,51 @@ export const favorites = sqliteTable('favorites', {
     .notNull()
     .default(sql`(unixepoch())`),
 });
+
+export const articleCache = sqliteTable('articleCache', {
+  id: integer('id').primaryKey(),
+  url: text('url').notNull().unique(),
+  title: text('title'),
+  cite: text('cite'),
+  author: text('author'),
+  author_cite: text('author_cite'),
+  author_short: text('author_short'),
+  author_type: text('author_type'),
+  date: text('date'),
+  source: text('source'),
+  word_count: integer('word_count'),
+  html: text('html'),
+  followUpQuestions: text('followUpQuestions', {
+    mode: 'json',
+  })
+    .$type<string[]>()
+    .default(sql`'[]'`),
+  hitCount: integer('hitCount').notNull().default(0),
+  lastAccessed: integer('lastAccessed', {
+    mode: 'timestamp',
+  })
+    .notNull()
+    .default(sql`(unixepoch())`),
+  createdAt: integer('createdAt', {
+    mode: 'timestamp',
+  })
+    .notNull()
+    .default(sql`(unixepoch())`),
+  expiresAt: integer('expiresAt', {
+    mode: 'timestamp',
+  }),
+});
+
+export const articleQA = sqliteTable('articleQA', {
+  id: integer('id').primaryKey(),
+  articleUrl: text('articleUrl')
+    .notNull()
+    .references(() => articleCache.url),
+  question: text('question').notNull(),
+  answer: text('answer').notNull(),
+  createdAt: integer('createdAt', {
+    mode: 'timestamp',
+  })
+    .notNull()
+    .default(sql`(unixepoch())`),
+});
