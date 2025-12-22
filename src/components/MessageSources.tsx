@@ -8,13 +8,25 @@ import {
 } from '@headlessui/react';
 import { Document } from '@langchain/core/documents';
 import { File } from 'lucide-react';
-import { Fragment, useState } from 'react';
+import { Fragment, useState, useEffect } from 'react';
 import ArticleExtractPanel from './ArticleExtractPanel';
 
 const MessageSources = ({ sources }: { sources: Document[] }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isExtractPanelOpen, setIsExtractPanelOpen] = useState(false);
   const [selectedUrl, setSelectedUrl] = useState('');
+
+  // Check for extract parameter in URL on mount
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const extractUrl = params.get('extract');
+      if (extractUrl) {
+        setSelectedUrl(decodeURIComponent(extractUrl));
+        setIsExtractPanelOpen(true);
+      }
+    }
+  }, []);
 
   const closeModal = () => {
     setIsDialogOpen(false);
@@ -30,6 +42,28 @@ const MessageSources = ({ sources }: { sources: Document[] }) => {
     e.preventDefault();
     setSelectedUrl(url);
     setIsExtractPanelOpen(true);
+
+    // Update URL parameter
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      params.set('extract', encodeURIComponent(url));
+      const newUrl = `${window.location.pathname}?${params.toString()}`;
+      window.history.pushState({}, '', newUrl);
+    }
+  };
+
+  const handleCloseExtractPanel = () => {
+    setIsExtractPanelOpen(false);
+
+    // Remove extract parameter from URL
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      params.delete('extract');
+      const newUrl = params.toString()
+        ? `${window.location.pathname}?${params.toString()}`
+        : window.location.pathname;
+      window.history.pushState({}, '', newUrl);
+    }
   };
 
   return (
@@ -170,7 +204,7 @@ const MessageSources = ({ sources }: { sources: Document[] }) => {
 
       <ArticleExtractPanel
         isOpen={isExtractPanelOpen}
-        onClose={() => setIsExtractPanelOpen(false)}
+        onClose={handleCloseExtractPanel}
         url={selectedUrl}
         searchText=""
       />
