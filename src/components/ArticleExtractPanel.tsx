@@ -16,7 +16,7 @@ import {
   TransitionChild,
 } from '@headlessui/react';
 import { Fragment } from 'react';
-import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
+import { Panel, Group, Separator } from 'react-resizable-panels';
 
 interface Article {
   html?: string;
@@ -300,7 +300,7 @@ const ArticleExtractPanel: React.FC<ArticleExtractPanelProps> = ({
                           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
                         </div>
                       ) : (
-                        <PanelGroup direction="vertical">
+                        <Group direction="vertical">
                           {/* AI Interaction Panel */}
                           <Panel defaultSize={40} minSize={20}>
                             <div className="h-full overflow-y-auto p-4 space-y-4">
@@ -410,9 +410,9 @@ const ArticleExtractPanel: React.FC<ArticleExtractPanelProps> = ({
                           </Panel>
 
                           {/* Resize Handle */}
-                          <PanelResizeHandle className="h-2 bg-light-200 dark:bg-dark-200 hover:bg-blue-400 dark:hover:bg-blue-600 transition-colors cursor-row-resize flex items-center justify-center">
+                          <Separator className="h-2 bg-light-200 dark:bg-dark-200 hover:bg-blue-400 dark:hover:bg-blue-600 transition-colors cursor-row-resize flex items-center justify-center">
                             <div className="w-12 h-1 rounded-full bg-gray-400 dark:bg-gray-600" />
-                          </PanelResizeHandle>
+                          </Separator>
 
                           {/* Article Content Panel */}
                           <Panel defaultSize={60} minSize={30}>
@@ -487,7 +487,7 @@ const ArticleExtractPanel: React.FC<ArticleExtractPanelProps> = ({
                               )}
                             </div>
                           </Panel>
-                        </PanelGroup>
+                        </Group>
                       )}
                     </div>
                   </div>
