@@ -1,116 +1,161 @@
 import { Cloud, Sun, CloudRain, CloudSnow, Wind } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import grab from "grab-url";
+
+/**
+ * Fetches open-meteo API weather forecast for latitude
+ * and longitude and code symbol.
+ * @param {number} latitude
+ * @param {number} longitude
+ * @returns {Promise<WeatherForecast[]>}
+ */
+export async function getWeatherForecast(latitude, longitude) {
+
+  const data = await grab("https://api.open-meteo.com/v1/forecast", {
+    latitude,
+    longitude,
+    current: "temperature_2m,weather_code",
+    daily: "temperature_2m_max,temperature_2m_min,weather_code",
+    timezone: "auto",
+    temperature_unit: "fahrenheit",
+  });
+
+  if (data.error) {
+    throw new Error(`Request error: ${data.error}`);
+  }
+  if (data && data.current && data.daily && data.daily.time) {
+    const forecast = [
+      {
+        date: data.current.time,
+        temp: Math.round(data.current.temperature_2m),
+        symbol: getWeatherSymbol(data.current.weather_code),
+        rain: data.current.rain,
+      },
+      ...data.daily.time.slice(1).map((time, index) => ({
+        date: time,
+        max: Math.round(data.daily.temperature_2m_max[index + 1]),
+        min: Math.round(data.daily.temperature_2m_min[index + 1]),
+        symbol: getWeatherSymbol(data.daily.weather_code[index + 1]),
+      })),
+    ];
+
+    return forecast;
+  } else {
+    throw new Error("Invalid data structure received from API");
+  }
+}
+
+const getWeatherSymbol = (code) => {
+  const weatherCodes = [
+    { code: 0, symbol: "☀", symbolLabel: "Sunny" },
+    { code: 1, symbol: "🌤", symbolLabel: "Mainly clear" },
+    { code: 2, symbol: "⛅", symbolLabel: "Partly cloudy" },
+    { code: 3, symbol: "☁", symbolLabel: "Overcast" },
+    { code: [45, 48], symbol: "🌫", symbolLabel: "Fog" },
+    { code: [51, 53, 55], symbol: "☂", symbolLabel: "Drizzle" },
+    { code: [56, 57], symbol: "☂", symbolLabel: "Freezing Drizzle" },
+    { code: [61, 63, 65], symbol: "☂", symbolLabel: "Rain" },
+    { code: [66, 67], symbol: "☂", symbolLabel: "Freezing Rain" },
+    { code: [71, 73, 75], symbol: "☃", symbolLabel: "Snow fall" },
+    { code: 77, symbol: "☃", symbolLabel: "Snow grains" },
+    { code: [80, 81, 82], symbol: "☔", symbolLabel: "Rain showers" },
+    { code: [85, 86], symbol: "⛄", symbolLabel: "Snow showers" },
+    { code: 95, symbol: "⛈", symbolLabel: "Thunderstorm" },
+    { code: [96, 99], symbol: "⛈", symbolLabel: "Thunderstorm with hail" },
+  ];
+
+  for (let weather of weatherCodes) {
+    if (Array.isArray(weather.code)) {
+      if (weather.code.includes(code)) return weather.symbol;
+    } else if (weather.code === code) return weather.symbol;
+  }
+  return "❓";
+};
+
+/**
+ * Fetches the weather forecast for the client's current IP address.
+ * @returns {Promise<{forecast: WeatherForecast[], location: string}>}
+ */
+export async function getWeatherForClientIP() {
+  try {
+    // Fetch IP info
+    const ipData = await grab("https://ipinfo.io/json", {});
+    if (ipData.error) {
+      throw new Error(`Request error: ${ipData.error}`);
+    }
+    // Extract latitude and longitude
+    const [latitude, longitude] = ipData.loc.split(",");
+
+    // Get weather forecast
+    const forecast = await getWeatherForecast(latitude, longitude);
+
+    return {
+      forecast,
+      location: `${ipData.city}, ${ipData.region}`,
+      city: ipData.city,
+    };
+  } catch (error) {
+    console.error("Error fetching weather:", error);
+    throw error;
+  }
+}
 
 const WeatherWidget = () => {
-  const [data, setData] = useState({
-    temperature: 0,
-    condition: '',
-    location: '',
-    humidity: 0,
-    windSpeed: 0,
-    icon: '',
-    temperatureUnit: 'C',
-    windSpeedUnit: 'm/s',
-  });
+  const [data, setData] = useState<{
+    temperature: number;
+    condition: string;
+    location: string;
+    symbol: string;
+  } | null>(null);
 
   const [loading, setLoading] = useState(true);
 
-  const getApproxLocation = async () => {
-    const res = await fetch('https://ipwhois.app/json/');
-    const data = await res.json();
+  const updateWeather = async () => {
+    try {
+      const weatherData = await getWeatherForClientIP();
 
-    return {
-      latitude: data.latitude,
-      longitude: data.longitude,
-      city: data.city,
-    };
-  };
+      if (weatherData && weatherData.forecast && weatherData.forecast.length > 0) {
+        const current = weatherData.forecast[0];
 
-  const getLocation = async (
-    callback: (location: {
-      latitude: number;
-      longitude: number;
-      city: string;
-    }) => void,
-  ) => {
-    if (navigator.geolocation) {
-      const result = await navigator.permissions.query({
-        name: 'geolocation',
-      });
-
-      if (result.state === 'granted') {
-        navigator.geolocation.getCurrentPosition(async (position) => {
-          const res = await fetch(
-            `https://api-bdc.io/data/reverse-geocode-client?latitude=${position.coords.latitude}&longitude=${position.coords.longitude}&localityLanguage=en`,
-            {
-              method: 'GET',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-            },
-          );
-
-          const data = await res.json();
-
-          callback({
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude,
-            city: data.locality,
-          });
+        setData({
+          temperature: current.temp || 0,
+          condition: getConditionFromSymbol(current.symbol),
+          location: weatherData.city,
+          symbol: current.symbol,
         });
-      } else if (result.state === 'prompt') {
-        callback(await getApproxLocation());
-        navigator.geolocation.getCurrentPosition((position) => {});
-      } else if (result.state === 'denied') {
-        callback(await getApproxLocation());
       }
-    } else {
-      callback(await getApproxLocation());
+      setLoading(false);
+    } catch (error) {
+      console.error('Error fetching weather data:', error);
+      setLoading(false);
     }
   };
 
-  const updateWeather = async () => {
-    getLocation(async (location) => {
-      const res = await fetch(`/api/weather`, {
-        method: 'POST',
-        body: JSON.stringify({
-          lat: location.latitude,
-          lng: location.longitude,
-          measureUnit: localStorage.getItem('measureUnit') ?? 'Metric',
-        }),
-      });
-
-      const data = await res.json();
-
-      if (res.status !== 200) {
-        console.error('Error fetching weather data');
-        setLoading(false);
-        return;
-      }
-
-      setData({
-        temperature: data.temperature,
-        condition: data.condition,
-        location: location.city,
-        humidity: data.humidity,
-        windSpeed: data.windSpeed,
-        icon: data.icon,
-        temperatureUnit: data.temperatureUnit,
-        windSpeedUnit: data.windSpeedUnit,
-      });
-      setLoading(false);
-    });
+  const getConditionFromSymbol = (symbol: string): string => {
+    const symbolMap: Record<string, string> = {
+      '☀': 'Sunny',
+      '🌤': 'Mainly clear',
+      '⛅': 'Partly cloudy',
+      '☁': 'Overcast',
+      '🌫': 'Fog',
+      '☂': 'Rain',
+      '☃': 'Snow',
+      '☔': 'Rain showers',
+      '⛄': 'Snow showers',
+      '⛈': 'Thunderstorm',
+    };
+    return symbolMap[symbol] || 'Unknown';
   };
 
   useEffect(() => {
     updateWeather();
-    const intervalId = setInterval(updateWeather, 30 * 1000);
+    const intervalId = setInterval(updateWeather, 30 * 60 * 1000); // Update every 30 minutes
     return () => clearInterval(intervalId);
   }, []);
 
   return (
     <div className="bg-light-secondary dark:bg-dark-secondary rounded-2xl border border-light-200 dark:border-dark-200 shadow-sm shadow-light-200/10 dark:shadow-black/25 flex flex-row items-center w-full h-24 min-h-[96px] max-h-[96px] px-3 py-2 gap-3">
-      {loading ? (
+      {loading || !data ? (
         <>
           <div className="flex flex-col items-center justify-center w-16 min-w-16 max-w-16 h-full animate-pulse">
             <div className="h-10 w-10 rounded-full bg-light-200 dark:bg-dark-200 mb-2" />
@@ -131,13 +176,9 @@ const WeatherWidget = () => {
       ) : (
         <>
           <div className="flex flex-col items-center justify-center w-16 min-w-16 max-w-16 h-full">
-            <img
-              src={`/weather-ico/${data.icon}.svg`}
-              alt={data.condition}
-              className="h-10 w-auto"
-            />
+            <div className="text-4xl mb-1">{data.symbol}</div>
             <span className="text-base font-semibold text-black dark:text-white">
-              {data.temperature}°{data.temperatureUnit}
+              {data.temperature}°F
             </span>
           </div>
           <div className="flex flex-col justify-between flex-1 h-full py-2">
@@ -145,16 +186,12 @@ const WeatherWidget = () => {
               <span className="text-sm font-semibold text-black dark:text-white">
                 {data.location}
               </span>
-              <span className="flex items-center text-xs text-black/60 dark:text-white/60 font-medium">
-                <Wind className="w-3 h-3 mr-1" />
-                {data.windSpeed} {data.windSpeedUnit}
-              </span>
             </div>
             <span className="text-xs text-black/50 dark:text-white/50 italic">
               {data.condition}
             </span>
             <div className="flex flex-row justify-between w-full mt-auto pt-2 border-t border-light-200/50 dark:border-dark-200/50 text-xs text-black/50 dark:text-white/50 font-medium">
-              <span>Humidity {data.humidity}%</span>
+              <span>Current Weather</span>
               <span className="font-semibold text-black/70 dark:text-white/70">
                 Now
               </span>

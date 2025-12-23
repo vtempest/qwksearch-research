@@ -3,7 +3,6 @@
 import { cn } from '@/lib/utils';
 import {
   BookOpenText,
-  Home,
   Search,
   SquarePen,
   Settings,
@@ -11,6 +10,7 @@ import {
   ArrowLeft,
 } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useSelectedLayoutSegments } from 'next/navigation';
 import React, { useState, type ReactNode } from 'react';
 import Layout from './Layout';
@@ -35,19 +35,22 @@ const Sidebar = ({ children }: { children: React.ReactNode }) => {
 
   const navLinks = [
     {
-      icon: Home,
+      icon: null,
+      customIcon: '/icons/icon-searchresults.svg',
       href: '/',
       active: segments.length === 0 || segments.includes('c'),
-      label: 'Home',
+      label: 'Research',
     },
     {
-      icon: Search,
+      icon: null,
+      customIcon: '/icons/icon-news-title.svg',
       href: '/discover',
       active: segments.includes('discover'),
       label: 'News Feed',
     },
     {
-      icon: BookOpenText,
+      icon: null,
+      customIcon: '/icons/icon-organize.svg',
       href: '/library',
       active: segments.includes('library'),
       label: 'History',
@@ -82,13 +85,26 @@ const Sidebar = ({ children }: { children: React.ReactNode }) => {
                     'group rounded-lg hover:bg-light-200 hover:dark:bg-dark-200 transition duration-200',
                   )}
                 >
-                  <link.icon
-                    size={25}
-                    className={cn(
-                      !link.active && 'group-hover:scale-105',
-                      'transition duration:200 m-1.5',
-                    )}
-                  />
+                  {link.customIcon ? (
+                    <Image
+                      src={link.customIcon}
+                      alt={link.label}
+                      width={25}
+                      height={25}
+                      className={cn(
+                        !link.active && 'group-hover:scale-105',
+                        'transition duration:200 m-1.5',
+                      )}
+                    />
+                  ) : (
+                    <link.icon
+                      size={25}
+                      className={cn(
+                        !link.active && 'group-hover:scale-105',
+                        'transition duration:200 m-1.5',
+                      )}
+                    />
+                  )}
                 </div>
                 <p
                   className={cn(
@@ -127,7 +143,16 @@ const Sidebar = ({ children }: { children: React.ReactNode }) => {
             {link.active && (
               <div className="absolute top-0 -mt-4 h-1 w-full rounded-b-lg bg-black dark:bg-white" />
             )}
-            <link.icon />
+            {link.customIcon ? (
+              <Image
+                src={link.customIcon}
+                alt={link.label}
+                width={24}
+                height={24}
+              />
+            ) : (
+              <link.icon />
+            )}
             <p className="text-xs">{link.label}</p>
           </Link>
         ))}
