@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   ChevronLeft,
   Clipboard,
@@ -16,7 +16,6 @@ import {
   TransitionChild,
 } from '@headlessui/react';
 import { Fragment } from 'react';
-import { Panel, Group, Separator } from 'react-resizable-panels';
 
 interface Article {
   html?: string;
@@ -72,6 +71,9 @@ const ArticleExtractPanel: React.FC<ArticleExtractPanelProps> = ({
   const [isFavorited, setIsFavorited] = useState(false);
   const [isLoadingFavorite, setIsLoadingFavorite] = useState(false);
   const [isDesktop, setIsDesktop] = useState(false);
+  const [panelWidth, setPanelWidth] = useState(600);
+  const [isResizing, setIsResizing] = useState(false);
+  const resizeRef = useRef<HTMLDivElement>(null);
 
   // Track window width for desktop/mobile layout
   useEffect(() => {
@@ -82,6 +84,33 @@ const ArticleExtractPanel: React.FC<ArticleExtractPanelProps> = ({
     window.addEventListener('resize', checkDesktop);
     return () => window.removeEventListener('resize', checkDesktop);
   }, []);
+
+  // Handle horizontal resize
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!isResizing) return;
+      const newWidth = window.innerWidth - e.clientX;
+      setPanelWidth(Math.max(400, Math.min(newWidth, window.innerWidth - 100)));
+    };
+
+    const handleMouseUp = () => {
+      setIsResizing(false);
+    };
+
+    if (isResizing) {
+      document.addEventListener('mousemove', handleMouseMove);
+      document.addEventListener('mouseup', handleMouseUp);
+      document.body.style.cursor = 'ew-resize';
+      document.body.style.userSelect = 'none';
+    }
+
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+      document.body.style.cursor = '';
+      document.body.style.userSelect = '';
+    };
+  }, [isResizing]);
 
   // Extract URL content when panel opens
   useEffect(() => {
@@ -329,7 +358,20 @@ const ArticleExtractPanel: React.FC<ArticleExtractPanelProps> = ({
                 leaveFrom="translate-x-0"
                 leaveTo="translate-x-full"
               >
-                <DialogPanel className="pointer-events-auto w-screen max-w-md">
+                <DialogPanel
+                  className="pointer-events-auto relative"
+                  style={{ width: `${panelWidth}px` }}
+                >
+                  {/* Horizontal Resize Handle */}
+                  <div
+                    ref={resizeRef}
+                    onMouseDown={() => setIsResizing(true)}
+                    className="absolute left-0 top-0 bottom-0 w-1 cursor-ew-resize hover:bg-blue-500 bg-transparent transition-colors z-50"
+                    style={{ touchAction: 'none' }}
+                  >
+                    <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-1 h-12 rounded-full bg-gray-400 dark:bg-gray-600 opacity-50 hover:opacity-100 transition-opacity" />
+                  </div>
+
                   <div className="flex h-full flex-col bg-white dark:bg-dark-secondary shadow-xl">
                     {/* Header */}
                     <div className="flex items-center justify-between bg-light-100 dark:bg-dark-100 px-4 py-3 border-b border-light-200 dark:border-dark-200">
@@ -342,16 +384,15 @@ const ArticleExtractPanel: React.FC<ArticleExtractPanelProps> = ({
                     </div>
 
                     {/* Content */}
-                    <div className="flex-1 overflow-hidden">
+                    <div className="flex-1 overflow-y-auto">
                       {isLoadingExtract ? (
                         <div className="flex justify-center items-center h-full">
                           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
                         </div>
                       ) : (
-                        <Group orientation="vertical">
-                          {/* AI Interaction Panel */}
-                          <Panel defaultSize={40} minSize={20}>
-                            <div className="h-full overflow-y-auto p-4 space-y-4">
+                        <div className="p-4 space-y-6">
+                          {/* AI Interaction Section */}
+                          <div className="space-y-4">
                               {/* Action Buttons */}
                               <div className="flex items-center space-x-2">
                                 <button
@@ -454,20 +495,13 @@ const ArticleExtractPanel: React.FC<ArticleExtractPanelProps> = ({
                                   {aiError}
                                 </div>
                               )}
-                            </div>
-                          </Panel>
+                          </div>
 
-                          {/* Resize Handle */}
-                          <Separator className="h-2 bg-light-200 dark:bg-dark-200 hover:bg-blue-400 dark:hover:bg-blue-600 transition-colors cursor-row-resize flex items-center justify-center">
-                            <div className="w-12 h-1 rounded-full bg-gray-400 dark:bg-gray-600" />
-                          </Separator>
-
-                          {/* Article Content Panel */}
-                          <Panel defaultSize={60} minSize={30}>
-                            <div className="h-full overflow-y-auto p-4">
+                          {/* Article Content Section */}
+                          <div className="border-t border-light-200 dark:border-dark-200 pt-6">
                               {/* Extracted Article */}
                               {extractedArticle && (
-                                <div className="mt-4 border-t border-light-200 dark:border-dark-200 pt-4">
+                                <div>
                                   {/* Title and Favorite Button */}
                                   <div className="flex items-start justify-between mb-2">
                                     <h3 className="font-semibold dark:text-white flex-1">
@@ -525,16 +559,15 @@ const ArticleExtractPanel: React.FC<ArticleExtractPanelProps> = ({
 
                                   {/* Article HTML Content */}
                                   <div
-                                    className="prose dark:prose-invert max-w-none text-sm"
+                                    className="prose dark:prose-invert max-w-none text-sm dark:text-white"
                                     dangerouslySetInnerHTML={{
                                       __html: extractedArticle.html || '',
                                     }}
                                   />
                                 </div>
                               )}
-                            </div>
-                          </Panel>
-                        </Group>
+                          </div>
+                        </div>
                       )}
                     </div>
                   </div>
