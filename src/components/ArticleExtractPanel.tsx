@@ -559,7 +559,8 @@ const ArticleExtractPanel: React.FC<ArticleExtractPanelProps> = ({
 
                                 {/* Article HTML Content */}
                                 <div
-                                  className="prose dark:prose-invert max-w-none text-sm dark:text-white"
+                                  id="article-content"
+                                  className="prose dark:prose-invert max-w-none text-md dark:text-white leading-relaxed"
                                   dangerouslySetInnerHTML={{
                                     __html: extractedArticle.html || '',
                                   }}

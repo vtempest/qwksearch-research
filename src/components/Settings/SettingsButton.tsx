@@ -14,7 +14,7 @@ const SettingsButton = () => {
         onClick={() => setIsOpen(true)}
       >
         <Image
-          src='./icons/icon-configure.svg'
+          src='/icons/icon-configure.svg'
           alt='default'
           width={25}
           height={25}

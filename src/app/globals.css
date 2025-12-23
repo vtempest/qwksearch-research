@@ -5,6 +5,10 @@
 /* @plugin "@tailwindcss/typography"; */
 /* @plugin "@headlessui/tailwindcss"; */
 
+#article-content a {
+  text-decoration: underline;
+}
+
 @theme {
   /* Map legacy color variables to shadcn standard colors for backward compatibility */
   --color-light-50: var(--background);
@@ -91,7 +95,9 @@
   font-display: swap;
 }
 
+
 @media screen and (-webkit-min-device-pixel-ratio: 0) {
+
   select,
   textarea,
   input {
@@ -213,6 +219,7 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }
