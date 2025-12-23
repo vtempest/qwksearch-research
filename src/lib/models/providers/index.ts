@@ -8,7 +8,6 @@ import GroqProvider from './groq';
 import DeepSeekProvider from './deepseek';
 import LMStudioProvider from './lmstudio';
 import LemonadeProvider from './lemonade';
-import AimlProvider from '@/lib/models/providers/aiml';
 
 export const providers: Record<string, ProviderConstructor<any>> = {
   openai: OpenAIProvider,
@@ -17,7 +16,6 @@ export const providers: Record<string, ProviderConstructor<any>> = {
   gemini: GeminiProvider,
   groq: GroqProvider,
   deepseek: DeepSeekProvider,
-  aiml: AimlProvider,
   lmstudio: LMStudioProvider,
   lemonade: LemonadeProvider,
 };

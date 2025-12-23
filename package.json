@@ -63,6 +63,7 @@
     "react-text-to-speech": "^5.0.5",
     "react-textarea-autosize": "^8.5.9",
     "sonner": "^2.0.7",
+    "streamdown": "^1.6.10",
     "tailwind-merge": "^3.4.0",
     "tldts": "^7.0.19",
     "winston": "^3.19.0",
