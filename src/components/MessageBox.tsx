@@ -70,7 +70,7 @@ const MessageBox = ({
   return (
     <div className="space-y-6">
       <div className={'w-full pt-8 break-words'}>
-        <h2 className="text-black dark:text-white font-medium text-3xl lg:w-9/12">
+        <h2 className="text-foreground font-medium text-3xl lg:w-9/12">
           {section.userMessage.content}
         </h2>
       </div>
@@ -84,8 +84,8 @@ const MessageBox = ({
             section.sourceMessage.sources.length > 0 && (
               <div className="flex flex-col space-y-2">
                 <div className="flex flex-row items-center space-x-2">
-                  <BookCopy className="text-black dark:text-white" size={20} />
-                  <h3 className="text-black dark:text-white font-medium text-xl">
+                  <BookCopy className="text-foreground" size={20} />
+                  <h3 className="text-foreground font-medium text-xl">
                     Sources
                   </h3>
                 </div>
@@ -98,12 +98,12 @@ const MessageBox = ({
               <div className="flex flex-row items-center space-x-2">
                 <Disc3
                   className={cn(
-                    'text-black dark:text-white',
+                    'text-foreground',
                     isLast && loading ? 'animate-spin' : 'animate-none',
                   )}
                   size={20}
                 />
-                <h3 className="text-black dark:text-white font-medium text-xl">
+                <h3 className="text-foreground font-medium text-xl">
                   Answer
                 </h3>
               </div>
@@ -114,7 +114,7 @@ const MessageBox = ({
                 <Markdown
                   className={cn(
                     'prose prose-h1:mb-3 prose-h2:mb-2 prose-h2:mt-6 prose-h2:font-[800] prose-h3:mt-4 prose-h3:mb-1.5 prose-h3:font-[600] dark:prose-invert prose-p:leading-relaxed prose-pre:p-0 font-[400]',
-                    'max-w-none break-words text-black dark:text-white',
+                    'max-w-none break-words text-foreground',
                   )}
                   options={markdownOverrides}
                 >
@@ -122,7 +122,7 @@ const MessageBox = ({
                 </Markdown>
 
                 {loading && isLast ? null : (
-                  <div className="flex flex-row items-center justify-between w-full text-black dark:text-white py-4 -mx-2">
+                  <div className="flex flex-row items-center justify-between w-full text-foreground py-4 -mx-2">
                     <div className="flex flex-row items-center space-x-1">
                       <Rewrite
                         rewrite={rewrite}
@@ -142,7 +142,7 @@ const MessageBox = ({
                             start();
                           }
                         }}
-                        className="p-2 text-black/70 dark:text-white/70 rounded-xl hover:bg-light-secondary dark:hover:bg-dark-secondary transition duration-200 hover:text-black dark:hover:text-white"
+                        className="p-2 text-muted-foreground rounded-xl hover:bg-secondary transition duration-200 hover:text-foreground"
                       >
                         {speechStatus === 'started' ? (
                           <StopCircle size={18} />
@@ -159,13 +159,13 @@ const MessageBox = ({
                   section.suggestions.length > 0 &&
                   section.assistantMessage &&
                   !loading && (
-                    <div className="mt-8 pt-6 border-t border-light-200/50 dark:border-dark-200/50">
+                    <div className="mt-8 pt-6 border-t border-border/50">
                       <div className="flex flex-row items-center space-x-2 mb-4">
                         <Layers3
-                          className="text-black dark:text-white"
+                          className="text-foreground"
                           size={20}
                         />
-                        <h3 className="text-black dark:text-white font-medium text-xl">
+                        <h3 className="text-foreground font-medium text-xl">
                           Related
                         </h3>
                       </div>
@@ -174,19 +174,19 @@ const MessageBox = ({
                           (suggestion: string, i: number) => (
                             <div key={i}>
                               {i > 0 && (
-                                <div className="h-px bg-light-200/40 dark:bg-dark-200/40 mx-3" />
+                                <div className="h-px bg-border mx-3" />
                               )}
                               <button
                                 onClick={() => sendMessage(suggestion)}
                                 className="group w-full px-3 py-4 text-left transition-colors duration-200"
                               >
                                 <div className="flex items-center justify-between gap-3">
-                                  <p className="text-sm text-black/70 dark:text-white/70 group-hover:text-[#24A0ED] transition-colors duration-200 leading-relaxed">
+                                  <p className="text-sm text-muted-foreground group-hover:text-primary transition-colors duration-200 leading-relaxed">
                                     {suggestion}
                                   </p>
                                   <Plus
                                     size={16}
-                                    className="text-black/40 dark:text-white/40 group-hover:text-[#24A0ED] transition-colors duration-200 flex-shrink-0"
+                                    className="text-muted-foreground/60 group-hover:text-primary transition-colors duration-200 flex-shrink-0"
                                   />
                                 </div>
                               </button>

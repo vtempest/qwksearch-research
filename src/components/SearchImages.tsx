@@ -66,13 +66,13 @@ const SearchImages = ({
             );
             setLoading(false);
           }}
-          className="border border-dashed border-light-200 dark:border-dark-200 hover:bg-light-200 dark:hover:bg-dark-200 active:scale-95 duration-200 transition px-4 py-2 flex flex-row items-center justify-between rounded-lg dark:text-white text-sm w-full"
+          className="border border-dashed border-border hover:bg-secondary active:scale-95 duration-200 transition px-4 py-2 flex flex-row items-center justify-between rounded-lg text-foreground text-sm w-full"
         >
           <div className="flex flex-row items-center space-x-2">
             <ImagesIcon size={17} />
             <p>Search images</p>
           </div>
-          <PlusIcon className="text-[#24A0ED]" size={17} />
+          <PlusIcon className="text-primary" size={17} />
         </button>
       )}
       {loading && (
@@ -80,7 +80,7 @@ const SearchImages = ({
           {[...Array(4)].map((_, i) => (
             <div
               key={i}
-              className="bg-light-secondary dark:bg-dark-secondary h-32 w-full rounded-lg animate-pulse aspect-video object-cover"
+              className="bg-secondary h-32 w-full rounded-lg animate-pulse aspect-video object-cover"
             />
           ))}
         </div>
@@ -124,7 +124,7 @@ const SearchImages = ({
             {images.length > 4 && (
               <button
                 onClick={() => setOpen(true)}
-                className="bg-light-100 hover:bg-light-200 dark:bg-dark-100 dark:hover:bg-dark-200 transition duration-200 active:scale-95 hover:scale-[1.02] h-auto w-full rounded-lg flex flex-col justify-between text-white p-2"
+                className="bg-muted hover:bg-secondary transition duration-200 active:scale-95 hover:scale-[1.02] h-auto w-full rounded-lg flex flex-col justify-between p-2"
               >
                 <div className="flex flex-row items-center space-x-1">
                   {images.slice(3, 6).map((image, i) => (
@@ -136,7 +136,7 @@ const SearchImages = ({
                     />
                   ))}
                 </div>
-                <p className="text-black/70 dark:text-white/70 text-xs">
+                <p className="text-muted-foreground text-xs">
                   View {images.length - 3} more
                 </p>
               </button>

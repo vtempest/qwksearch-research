@@ -6,31 +6,32 @@
 /* @plugin "@headlessui/tailwindcss"; */
 
 @theme {
-  --color-light-50: #ffffff;
-  --color-light-100: #f6f8fa;
-  --color-light-200: #e8edf1;
-  --color-light-300: #d0d7de;
+  /* Map legacy color variables to shadcn standard colors for backward compatibility */
+  --color-light-50: var(--background);
+  --color-light-100: var(--secondary);
+  --color-light-200: var(--border);
+  --color-light-300: var(--input);
 
-  --color-light-primary: var(--color-light-50);
-  --color-light-secondary: var(--color-light-100);
+  --color-light-primary: var(--background);
+  --color-light-secondary: var(--secondary);
 
-  --color-dark-50: #0d1117;
-  --color-dark-100: #161b22;
-  --color-dark-200: #21262d;
-  --color-dark-300: #30363d;
+  --color-dark-50: var(--background);
+  --color-dark-100: var(--secondary);
+  --color-dark-200: var(--border);
+  --color-dark-300: var(--input);
 
-  --color-dark-primary: var(--color-dark-50);
-  --color-dark-secondary: var(--color-dark-100);
+  --color-dark-primary: var(--background);
+  --color-dark-secondary: var(--secondary);
 
-  --color-border-light-50: #ffffff;
-  --color-border-light-100: #f6f8fa;
-  --color-border-light-200: #e8edf1;
-  --color-border-light-300: #d0d7de;
+  --color-border-light-50: var(--background);
+  --color-border-light-100: var(--secondary);
+  --color-border-light-200: var(--border);
+  --color-border-light-300: var(--input);
 
-  --color-border-dark-50: #0d1117;
-  --color-border-dark-100: #161b22;
-  --color-border-dark-200: #21262d;
-  --color-border-dark-300: #30363d;
+  --color-border-dark-50: var(--background);
+  --color-border-dark-100: var(--secondary);
+  --color-border-dark-200: var(--border);
+  --color-border-dark-300: var(--input);
 }
 
 /* Re-adding custom directives using @layer base not needed for standard reset, but keeping scrollbar styles */
@@ -44,10 +45,10 @@
     display: none;
   }
 
-  /* Custom scrollbar implementation using the new color vars or raw values if needed */
+  /* Custom scrollbar implementation using shadcn color variables */
   * {
     scrollbar-width: thin;
-    scrollbar-color: var(--color-light-200) transparent;
+    scrollbar-color: var(--border) transparent;
   }
 
   *::-webkit-scrollbar {
@@ -60,29 +61,13 @@
   }
 
   *::-webkit-scrollbar-thumb {
-    background: var(--color-light-200);
+    background: var(--border);
     border-radius: 3px;
     transition: background 0.2s ease;
   }
 
   *::-webkit-scrollbar-thumb:hover {
-    background: var(--color-light-300);
-  }
-
-  /* Dark mode scrollbar overrides */
-  :root.dark *,
-  :root:has(.dark) * {
-    scrollbar-color: var(--color-dark-200) transparent;
-  }
-
-  :root.dark *::-webkit-scrollbar-thumb,
-  :root:has(.dark) *::-webkit-scrollbar-thumb {
-    background: var(--color-dark-200);
-  }
-
-  :root.dark *::-webkit-scrollbar-thumb:hover,
-  :root:has(.dark) *::-webkit-scrollbar-thumb:hover {
-    background: var(--color-dark-300);
+    background: var(--input);
   }
 
   html {

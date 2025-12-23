@@ -485,7 +485,7 @@ const ArticleExtractPanel: React.FC<ArticleExtractPanelProps> = ({
                               {aiResponse && (
                                 <div
                                   ref={highlightCodeSyntax}
-                                  className="bg-[#FAFAF7] dark:bg-dark-100 rounded-lg shadow-md p-4"
+                                  className="bg-muted rounded-lg shadow-md p-4"
                                   dangerouslySetInnerHTML={{ __html: aiResponse }}
                                 />
                               )}
