@@ -1,4 +1,4 @@
-import { Discover } from '@/app/news/page
+import { Discover } from '@/app/news/page'
 import Link from 'next/link';
 
 const MajorNewsCard = ({
