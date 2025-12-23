@@ -7,6 +7,14 @@
 
 #article-content a {
   text-decoration: underline;
+  text-decoration-color: var(--primary);
+  text-decoration-thickness: 1px;
+}
+
+#article-content a:hover {
+  text-decoration: underline;
+  text-decoration-color: var(--primary);
+  text-decoration-thickness: 1px;
 }
 
 @theme {
