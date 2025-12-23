@@ -357,96 +357,6 @@ function PricingSection() {
     </section>
   )
 }
-
-function ComparisonSection() {
-  const features = [
-    {
-      name: "Conversations/month",
-      startup: "10K",
-      growth: "100K",
-      enterprise: "Unlimited",
-      custom: "Unlimited",
-    },
-    {
-      name: "White-Labeling",
-      startup: "Basic",
-      growth: "Full",
-      enterprise: "Full+",
-      custom: "Custom",
-    },
-    {
-      name: "API Access",
-      startup: "Limited",
-      growth: "Advanced",
-      enterprise: "Full",
-      custom: "Full",
-    },
-    {
-      name: "Integrations",
-      startup: "5",
-      growth: "20+",
-      enterprise: "Custom",
-      custom: "Custom",
-    },
-    {
-      name: "Team Members",
-      startup: "3",
-      growth: "20",
-      enterprise: "Unlimited",
-      custom: "Unlimited",
-    },
-    {
-      name: "Support",
-      startup: "Email",
-      growth: "Priority Chat",
-      enterprise: "24/7 Phone",
-      custom: "Dedicated",
-    },
-    {
-      name: "SLA Guarantee",
-      startup: false,
-      growth: "99.5%",
-      enterprise: "99.99%",
-      custom: "Custom",
-    },
-  ]
-
-  return (
-    <section className="relative py-20 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-6xl mx-auto relative z-10">
-        <h2 className="text-4xl font-bold text-center text-white mb-16">Plan Comparison</h2>
-
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm border-collapse">
-            <thead>
-              <tr className="border-b-2 border-gray-800">
-                <th className="text-left py-4 px-4 text-white font-semibold">Feature</th>
-                <th className="text-center py-4 px-4 text-gray-400">Startup</th>
-                <th className="text-center py-4 px-4 text-cyan-400 font-semibold">Growth Agencies</th>
-                <th className="text-center py-4 px-4 text-gray-400">Enterprise</th>
-                <th className="text-center py-4 px-4 text-gray-400">Custom</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-800">
-              {features.map((feature) => (
-                <tr key={feature.name} className="hover:bg-gray-900/50 transition">
-                  <td className="py-4 px-4 text-white font-medium">{feature.name}</td>
-                  <td className="text-center py-4 px-4 text-gray-300">
-                    {feature.startup === false ? <X className="w-4 h-4 text-gray-600 mx-auto" /> : feature.startup}
-                  </td>
-                  <td className="text-center py-4 px-4 text-cyan-300">{feature.growth}</td>
-                  <td className="text-center py-4 px-4 text-gray-300">{feature.enterprise}</td>
-                  <td className="text-center py-4 px-4 text-gray-300">{feature.custom}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </section>
-  )
-}
-
 function ContactFormSection() {
   const { toast } = useToast()
   const [loading, setLoading] = useState(false)
@@ -566,21 +476,7 @@ function ContactFormSection() {
               </div>
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="plan">Interested Plan *</Label>
-              <Select
-                name="plan"
-                required
-                className="bg-gray-950 border-gray-800 text-white"
-                options={[
-                  { value: "", label: "Select a plan", disabled: true },
-                  { value: "startup", label: "Startup - $299/mo" },
-                  { value: "growth", label: "Growth Agencies - $699/mo" },
-                  { value: "enterprise", label: "Enterprise - $1,999/mo" },
-                  { value: "custom", label: "Custom Enterprise" }
-                ]}
-              />
-            </div>
+
 
             <div className="space-y-2">
               <Label>Key Features You Need</Label>

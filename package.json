@@ -10,7 +10,8 @@
     "lint": "next lint",
     "db:generate": "drizzle-kit generate",
     "db:push": "drizzle-kit push",
-    "db:migrate": "drizzle-kit migrate"
+    "db:migrate": "drizzle-kit migrate",
+    "db:create": "npm create cloud-db"
   },
   "dependencies": {
     "@headlessui/react": "^2.2.9",
