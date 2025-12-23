@@ -43,6 +43,13 @@
       "when": 1766442873470,
       "tag": "0005_damp_wendell_vaughn",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "6",
+      "when": 1766459770635,
+      "tag": "0006_tough_gideon",
+      "breakpoints": true
     }
   ]
 }
