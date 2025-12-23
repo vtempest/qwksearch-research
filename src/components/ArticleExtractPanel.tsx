@@ -419,6 +419,21 @@ const ArticleExtractPanel: React.FC<ArticleExtractPanelProps> = ({
                               >
                                 <Clipboard className="mr-2 h-4 w-4" />
                               </button>
+
+
+                              <button
+                                onClick={toggleFavorite}
+                                disabled={isLoadingFavorite}
+                                className="ml-2 p-1 hover:bg-light-200 dark:hover:bg-dark-200 rounded transition-colors disabled:opacity-50"
+                                title={isFavorited ? 'Remove from favorites' : 'Add to favorites'}
+                              >
+                                <Star
+                                  className={`h-5 w-5 ${isFavorited
+                                    ? 'fill-yellow-400 text-yellow-400'
+                                    : 'text-gray-400'
+                                    }`}
+                                />
+                              </button>
                             </div>
 
                             {showCopiedMessage && (
@@ -504,22 +519,7 @@ const ArticleExtractPanel: React.FC<ArticleExtractPanelProps> = ({
                               <div>
                                 {/* Title and Favorite Button */}
                                 <div className="flex items-start justify-between mb-2">
-                                  <h3 className="font-semibold dark:text-white flex-1">
-                                    {extractedArticle.title || 'Extracted Content'}
-                                  </h3>
-                                  <button
-                                    onClick={toggleFavorite}
-                                    disabled={isLoadingFavorite}
-                                    className="ml-2 p-1 hover:bg-light-200 dark:hover:bg-dark-200 rounded transition-colors disabled:opacity-50"
-                                    title={isFavorited ? 'Remove from favorites' : 'Add to favorites'}
-                                  >
-                                    <Star
-                                      className={`h-5 w-5 ${isFavorited
-                                        ? 'fill-yellow-400 text-yellow-400'
-                                        : 'text-gray-400'
-                                        }`}
-                                    />
-                                  </button>
+
                                 </div>
                                 {/* Citation Information */}
                                 {extractedArticle.cite && (
@@ -531,27 +531,10 @@ const ArticleExtractPanel: React.FC<ArticleExtractPanelProps> = ({
 
                                 {/* Metadata */}
                                 <div className="mb-3 text-xs text-gray-500 dark:text-gray-500 space-y-1">
-                                  {extractedArticle.author && (
-                                    <p>
-                                      <span className="font-semibold">Author:</span>{' '}
-                                      {extractedArticle.author}
-                                    </p>
-                                  )}
-                                  {extractedArticle.date && (
-                                    <p>
-                                      <span className="font-semibold">Date:</span>{' '}
-                                      {extractedArticle.date}
-                                    </p>
-                                  )}
-                                  {extractedArticle.source && (
-                                    <p>
-                                      <span className="font-semibold">Source:</span>{' '}
-                                      {extractedArticle.source}
-                                    </p>
-                                  )}
+
                                   {extractedArticle.word_count && (
                                     <p>
-                                      <span className="font-semibold">Word Count:</span>{' '}
+                                      <span className="font-semibold">Words:</span>{' '}
                                       {extractedArticle.word_count.toLocaleString()}
                                     </p>
                                   )}

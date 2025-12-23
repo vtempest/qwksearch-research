@@ -82,38 +82,6 @@ function SpotlightCard({ children }: { children: React.ReactNode }) {
   )
 }
 
-function Navigation() {
-  const [scrolled, setScrolled] = useState(false)
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 50)
-    }
-
-    window.addEventListener("scroll", handleScroll)
-    return () => window.removeEventListener("scroll", handleScroll)
-  }, [])
-
-  return (
-    <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? "bg-black/80 backdrop-blur-xl border-b border-white/10" : ""}`}
-    >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
-          <div className="flex items-center gap-3">
-            <img src="/apple-touch-icon.png" alt="QwkSearch" className="w-10 h-10" />
-            <span className="text-xl font-bold text-white">QwkSearch</span>
-          </div>
-          {/* */}
-          <Button className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white">
-            Get Started
-          </Button>
-        </div>
-      </div>
-    </nav>
-  )
-}
-
 function HeroSection() {
   return (
     <section className="relative pt-32 pb-20 px-4 sm:px-6 lg:px-8 overflow-hidden">
@@ -141,7 +109,7 @@ function HeroSection() {
             White-label professional standard Chat Agent UI. Customize everything. Own the customer relationship. Scale without limits.
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
+          {/* <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
             <Button size="lg" className="bg-white hover:bg-gray-100 text-black font-semibold group">
               Start Free Trial
               <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -154,7 +122,7 @@ function HeroSection() {
               <Play className="mr-2 w-4 h-4" />
               Watch Demo
             </Button>
-          </div>
+          </div> */}
 
           {/* <div className="mt-16 relative mx-auto max-w-4xl">
             <SpotlightCard>
@@ -548,8 +516,8 @@ function ContactFormSection() {
 
 export default function HomePage() {
   return (
-    <main className="relative full-width min-h-screen bg-black">
-      <div className="fixed inset-0 bg-[linear-gradient(to_right,#0f172a_1px,transparent_1px),linear-gradient(to_bottom,#0f172a_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000,transparent)]" />
+    <main className="pl-20 relative max-w min-h-screen bg-black">
+      <div className="fixed inset-0 bg-[linear-gradient(to_right,#0f172a_1px,transparent_1px),linear-gradient(to_bottom,#0f172a_1px,transparent_1px)]  [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000,transparent)]" />
 
       {/* <Navigation /> */}
       <HeroSection />
