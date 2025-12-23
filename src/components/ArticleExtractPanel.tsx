@@ -393,179 +393,179 @@ const ArticleExtractPanel: React.FC<ArticleExtractPanelProps> = ({
                         <div className="p-4 space-y-6">
                           {/* AI Interaction Section */}
                           <div className="space-y-4">
-                              {/* Action Buttons */}
-                              <div className="flex items-center space-x-2">
-                                <button
-                                  onClick={() => callLanguageAPI('question')}
-                                  disabled={isLoadingAI}
-                                  className="px-4 py-2 text-sm font-semibold flex items-center rounded-md bg-white text-blue-500 hover:bg-blue-100 disabled:opacity-50 transition-all duration-300 border border-blue-200 shadow-sm"
-                                >
-                                  <Bot className="mr-2 h-4 w-4" />
-                                  {isLoadingAI ? '...' : 'Ask'}
-                                </button>
+                            {/* Action Buttons */}
+                            <div className="flex items-center space-x-2">
+                              <button
+                                onClick={() => callLanguageAPI('question')}
+                                disabled={isLoadingAI}
+                                className="px-4 py-2 text-sm font-semibold flex items-center rounded-md bg-white text-blue-500 hover:bg-blue-100 disabled:opacity-50 transition-all duration-300 border border-blue-200 shadow-sm"
+                              >
+                                <Bot className="mr-2 h-4 w-4" />
+                                {isLoadingAI ? '...' : 'Ask'}
+                              </button>
 
-                                <button
-                                  onClick={() => callLanguageAPI('suggest-followups')}
-                                  disabled={isLoadingFollowups}
-                                  className="px-4 py-2 text-sm font-semibold flex items-center rounded-md bg-white text-blue-500 hover:bg-blue-100 disabled:opacity-50 transition-all duration-300 border border-blue-200 shadow-sm"
-                                >
-                                  <MessageCircleQuestion className="mr-2 h-4 w-4" />
-                                  Suggest ?
-                                </button>
+                              <button
+                                onClick={() => callLanguageAPI('suggest-followups')}
+                                disabled={isLoadingFollowups}
+                                className="px-4 py-2 text-sm font-semibold flex items-center rounded-md bg-white text-blue-500 hover:bg-blue-100 disabled:opacity-50 transition-all duration-300 border border-blue-200 shadow-sm"
+                              >
+                                <MessageCircleQuestion className="mr-2 h-4 w-4" />
+                                Suggest ?
+                              </button>
 
-                                <button
-                                  onClick={handleCopyHTMLToClipboard}
-                                  className="px-4 py-2 text-sm font-semibold flex items-center rounded-md bg-white text-blue-500 hover:bg-blue-100 transition-all duration-300 border border-blue-200 shadow-sm"
-                                >
-                                  <Clipboard className="mr-2 h-4 w-4" />
-                                </button>
+                              <button
+                                onClick={handleCopyHTMLToClipboard}
+                                className="px-4 py-2 text-sm font-semibold flex items-center rounded-md bg-white text-blue-500 hover:bg-blue-100 transition-all duration-300 border border-blue-200 shadow-sm"
+                              >
+                                <Clipboard className="mr-2 h-4 w-4" />
+                              </button>
+                            </div>
+
+                            {showCopiedMessage && (
+                              <div className="bg-blue-500 text-white text-sm font-medium px-3 py-2 rounded-md shadow-lg">
+                                Copied!
                               </div>
+                            )}
 
-                              {showCopiedMessage && (
-                                <div className="bg-blue-500 text-white text-sm font-medium px-3 py-2 rounded-md shadow-lg">
-                                  Copied!
-                                </div>
-                              )}
+                            {/* Input */}
+                            <div className="relative">
+                              <input
+                                value={userPrompt}
+                                onChange={(e) => setUserPrompt(e.target.value)}
+                                onKeyDown={(e) =>
+                                  e.key === 'Enter' && callLanguageAPI('question')
+                                }
+                                type="text"
+                                placeholder="Ask AI any question..."
+                                className="w-full px-3 py-2 text-sm rounded-md border border-gray-300 dark:border-dark-200 dark:bg-dark-100 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              />
+                            </div>
 
-                              {/* Input */}
-                              <div className="relative">
-                                <input
-                                  value={userPrompt}
-                                  onChange={(e) => setUserPrompt(e.target.value)}
-                                  onKeyDown={(e) =>
-                                    e.key === 'Enter' && callLanguageAPI('question')
-                                  }
-                                  type="text"
-                                  placeholder="Ask AI any question..."
-                                  className="w-full px-3 py-2 text-sm rounded-md border border-gray-300 dark:border-dark-200 dark:bg-dark-100 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                />
-                              </div>
-
-                              {/* Follow-up Questions */}
-                              {followupQuestions.length > 0 && (
-                                <div className="space-y-2">
-                                  <div
-                                    onClick={() =>
-                                      handleQuestionClick(defaultSummarizePrompt)
-                                    }
-                                    className="cursor-pointer rounded-md p-2 text-sm font-semibold hover:bg-slate-100 dark:hover:bg-gray-800 border border-slate-300 dark:border-dark-200 transition-colors"
-                                  >
-                                    {defaultSummarizePrompt}
-                                  </div>
-                                  {followupQuestions.map((question, i) => (
-                                    <div
-                                      key={i}
-                                      onClick={() => handleQuestionClick(question)}
-                                      className="cursor-pointer rounded-md p-2 text-sm font-semibold hover:bg-slate-100 dark:hover:bg-gray-800 border border-slate-300 dark:border-dark-200 transition-colors"
-                                      dangerouslySetInnerHTML={{ __html: question }}
-                                    />
-                                  ))}
-                                </div>
-                              )}
-
-                              {isLoadingFollowups && (
-                                <div className="flex justify-center">
-                                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
-                                </div>
-                              )}
-
-                              {followupError && (
-                                <div className="bg-red-500 text-white p-2 rounded-md text-sm">
-                                  {followupError}
-                                </div>
-                              )}
-
-                              {/* AI Response */}
-                              {isLoadingAI && (
-                                <div className="flex justify-center">
-                                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
-                                </div>
-                              )}
-
-                              {aiResponse && (
+                            {/* Follow-up Questions */}
+                            {followupQuestions.length > 0 && (
+                              <div className="space-y-2">
                                 <div
-                                  ref={highlightCodeSyntax}
-                                  className="bg-muted rounded-lg shadow-md p-4"
-                                  dangerouslySetInnerHTML={{ __html: aiResponse }}
-                                />
-                              )}
-
-                              {aiError && (
-                                <div className="bg-red-500 text-white p-2 rounded-md text-sm">
-                                  {aiError}
+                                  onClick={() =>
+                                    handleQuestionClick(defaultSummarizePrompt)
+                                  }
+                                  className="cursor-pointer rounded-md p-2 text-sm font-semibold hover:bg-slate-100 dark:hover:bg-gray-800 border border-slate-300 dark:border-dark-200 transition-colors"
+                                >
+                                  {defaultSummarizePrompt}
                                 </div>
-                              )}
+                                {followupQuestions.map((question, i) => (
+                                  <div
+                                    key={i}
+                                    onClick={() => handleQuestionClick(question)}
+                                    className="cursor-pointer rounded-md p-2 text-sm font-semibold hover:bg-slate-100 dark:hover:bg-gray-800 border border-slate-300 dark:border-dark-200 transition-colors"
+                                    dangerouslySetInnerHTML={{ __html: question }}
+                                  />
+                                ))}
+                              </div>
+                            )}
+
+                            {isLoadingFollowups && (
+                              <div className="flex justify-center">
+                                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+                              </div>
+                            )}
+
+                            {followupError && (
+                              <div className="bg-red-500 text-white p-2 rounded-md text-sm">
+                                {followupError}
+                              </div>
+                            )}
+
+                            {/* AI Response */}
+                            {isLoadingAI && (
+                              <div className="flex justify-center">
+                                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+                              </div>
+                            )}
+
+                            {aiResponse && (
+                              <div
+                                ref={highlightCodeSyntax}
+                                className="bg-muted rounded-lg shadow-md p-4"
+                                dangerouslySetInnerHTML={{ __html: aiResponse }}
+                              />
+                            )}
+
+                            {aiError && (
+                              <div className="bg-red-500 text-white p-2 rounded-md text-sm">
+                                {aiError}
+                              </div>
+                            )}
                           </div>
 
                           {/* Article Content Section */}
                           <div className="border-t border-light-200 dark:border-dark-200 pt-6">
-                              {/* Extracted Article */}
-                              {extractedArticle && (
-                                <div>
-                                  {/* Title and Favorite Button */}
-                                  <div className="flex items-start justify-between mb-2">
-                                    <h3 className="font-semibold dark:text-white flex-1">
-                                      {extractedArticle.title || 'Extracted Content'}
-                                    </h3>
-                                    <button
-                                      onClick={toggleFavorite}
-                                      disabled={isLoadingFavorite}
-                                      className="ml-2 p-1 hover:bg-light-200 dark:hover:bg-dark-200 rounded transition-colors disabled:opacity-50"
-                                      title={isFavorited ? 'Remove from favorites' : 'Add to favorites'}
-                                    >
-                                      <Star
-                                        className={`h-5 w-5 ${isFavorited
-                                          ? 'fill-yellow-400 text-yellow-400'
-                                          : 'text-gray-400'
-                                          }`}
-                                      />
-                                    </button>
-                                  </div>
-
-                                  {/* Citation Information */}
-                                  {extractedArticle.cite && (
-                                    <div className="mb-3 text-sm text-gray-600 dark:text-gray-400">
-                                      <p className="italic">{extractedArticle.cite}</p>
-                                    </div>
-                                  )}
-
-                                  {/* Metadata */}
-                                  <div className="mb-3 text-xs text-gray-500 dark:text-gray-500 space-y-1">
-                                    {extractedArticle.author && (
-                                      <p>
-                                        <span className="font-semibold">Author:</span>{' '}
-                                        {extractedArticle.author}
-                                      </p>
-                                    )}
-                                    {extractedArticle.date && (
-                                      <p>
-                                        <span className="font-semibold">Date:</span>{' '}
-                                        {extractedArticle.date}
-                                      </p>
-                                    )}
-                                    {extractedArticle.source && (
-                                      <p>
-                                        <span className="font-semibold">Source:</span>{' '}
-                                        {extractedArticle.source}
-                                      </p>
-                                    )}
-                                    {extractedArticle.word_count && (
-                                      <p>
-                                        <span className="font-semibold">Word Count:</span>{' '}
-                                        {extractedArticle.word_count.toLocaleString()}
-                                      </p>
-                                    )}
-                                  </div>
-
-                                  {/* Article HTML Content */}
-                                  <div
-                                    className="prose dark:prose-invert max-w-none text-sm dark:text-white"
-                                    dangerouslySetInnerHTML={{
-                                      __html: extractedArticle.html || '',
-                                    }}
-                                  />
+                            {/* Extracted Article */}
+                            {extractedArticle && (
+                              <div>
+                                {/* Title and Favorite Button */}
+                                <div className="flex items-start justify-between mb-2">
+                                  <h3 className="font-semibold dark:text-white flex-1">
+                                    {extractedArticle.title || 'Extracted Content'}
+                                  </h3>
+                                  <button
+                                    onClick={toggleFavorite}
+                                    disabled={isLoadingFavorite}
+                                    className="ml-2 p-1 hover:bg-light-200 dark:hover:bg-dark-200 rounded transition-colors disabled:opacity-50"
+                                    title={isFavorited ? 'Remove from favorites' : 'Add to favorites'}
+                                  >
+                                    <Star
+                                      className={`h-5 w-5 ${isFavorited
+                                        ? 'fill-yellow-400 text-yellow-400'
+                                        : 'text-gray-400'
+                                        }`}
+                                    />
+                                  </button>
                                 </div>
-                              )}
+                                {/* Citation Information */}
+                                {extractedArticle.cite && (
+                                  <div
+                                    className="mb-3 text-sm text-gray-600 dark:text-gray-400 italic"
+                                    dangerouslySetInnerHTML={{ __html: extractedArticle.cite }}
+                                  />
+                                )}
+
+                                {/* Metadata */}
+                                <div className="mb-3 text-xs text-gray-500 dark:text-gray-500 space-y-1">
+                                  {extractedArticle.author && (
+                                    <p>
+                                      <span className="font-semibold">Author:</span>{' '}
+                                      {extractedArticle.author}
+                                    </p>
+                                  )}
+                                  {extractedArticle.date && (
+                                    <p>
+                                      <span className="font-semibold">Date:</span>{' '}
+                                      {extractedArticle.date}
+                                    </p>
+                                  )}
+                                  {extractedArticle.source && (
+                                    <p>
+                                      <span className="font-semibold">Source:</span>{' '}
+                                      {extractedArticle.source}
+                                    </p>
+                                  )}
+                                  {extractedArticle.word_count && (
+                                    <p>
+                                      <span className="font-semibold">Word Count:</span>{' '}
+                                      {extractedArticle.word_count.toLocaleString()}
+                                    </p>
+                                  )}
+                                </div>
+
+                                {/* Article HTML Content */}
+                                <div
+                                  className="prose dark:prose-invert max-w-none text-sm dark:text-white"
+                                  dangerouslySetInnerHTML={{
+                                    __html: extractedArticle.html || '',
+                                  }}
+                                />
+                              </div>
+                            )}
                           </div>
                         </div>
                       )}

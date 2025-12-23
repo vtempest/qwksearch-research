@@ -36,7 +36,8 @@ const Sidebar = ({ children }: { children: React.ReactNode }) => {
   const navLinks = [
     {
       icon: null,
-      customIcon: '/icons/icon-searchresults.svg',
+      // customIcon: '/icons/icon-searchresults.svg',
+      customIcon: '/icons/apple-touch-icon.png',
       href: '/',
       active: segments.length === 0 || segments.includes('c'),
       label: 'Research',
@@ -50,7 +51,7 @@ const Sidebar = ({ children }: { children: React.ReactNode }) => {
     },
     {
       icon: null,
-      customIcon: '/icons/icon-organize.svg',
+      customIcon: '/icons/icon-history.svg',
       href: '/library',
       active: segments.includes('library'),
       label: 'History',
