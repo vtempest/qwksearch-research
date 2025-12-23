@@ -22,6 +22,8 @@ import {
 } from '@headlessui/react';
 import SettingsButton from './Settings/SettingsButton';
 import UserMenu from './UserMenu';
+import { ThemeDropdown } from "@/components/theme-dropdown"
+
 
 const VerticalIconContainer = ({ children }: { children: ReactNode }) => {
   return <div className="flex flex-col items-center w-full">{children}</div>;
@@ -104,6 +106,7 @@ const Sidebar = ({ children }: { children: React.ReactNode }) => {
 
           <div className="flex flex-col items-center gap-3">
             <UserMenu />
+            <ThemeDropdown />
             <SettingsButton />
           </div>
         </div>
