@@ -7,7 +7,7 @@ import { Card } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Select } from "@/components/ui/select"
 import { Checkbox } from "@/components/ui/checkbox"
 import { useToast } from "@/components/ui/use-toast"
 import {
@@ -532,51 +532,54 @@ function ContactFormSection() {
             <div className="grid md:grid-cols-2 gap-6">
               <div className="space-y-2">
                 <Label htmlFor="business-type">Business Type *</Label>
-                <Select name="business-type" required>
-                  <SelectTrigger className="bg-gray-950 border-gray-800 text-white">
-                    <SelectValue placeholder="Select business type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="startup">Startup</SelectItem>
-                    <SelectItem value="agency">Agency</SelectItem>
-                    <SelectItem value="saas">SaaS Company</SelectItem>
-                    <SelectItem value="enterprise">Enterprise</SelectItem>
-                    <SelectItem value="ecommerce">E-commerce</SelectItem>
-                    <SelectItem value="other">Other</SelectItem>
-                  </SelectContent>
-                </Select>
+                <Select
+                  name="business-type"
+                  required
+                  className="bg-gray-950 border-gray-800 text-white"
+                  options={[
+                    { value: "", label: "Select business type", disabled: true },
+                    { value: "startup", label: "Startup" },
+                    { value: "agency", label: "Agency" },
+                    { value: "saas", label: "SaaS Company" },
+                    { value: "enterprise", label: "Enterprise" },
+                    { value: "ecommerce", label: "E-commerce" },
+                    { value: "other", label: "Other" }
+                  ]}
+                />
               </div>
 
               <div className="space-y-2">
                 <Label htmlFor="team-size">Team Size *</Label>
-                <Select name="team-size" required>
-                  <SelectTrigger className="bg-gray-950 border-gray-800 text-white">
-                    <SelectValue placeholder="Select team size" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="1-10">1-10 employees</SelectItem>
-                    <SelectItem value="11-50">11-50 employees</SelectItem>
-                    <SelectItem value="51-200">51-200 employees</SelectItem>
-                    <SelectItem value="201-1000">201-1000 employees</SelectItem>
-                    <SelectItem value="1000+">1000+ employees</SelectItem>
-                  </SelectContent>
-                </Select>
+                <Select
+                  name="team-size"
+                  required
+                  className="bg-gray-950 border-gray-800 text-white"
+                  options={[
+                    { value: "", label: "Select team size", disabled: true },
+                    { value: "1-10", label: "1-10 employees" },
+                    { value: "11-50", label: "11-50 employees" },
+                    { value: "51-200", label: "51-200 employees" },
+                    { value: "201-1000", label: "201-1000 employees" },
+                    { value: "1000+", label: "1000+ employees" }
+                  ]}
+                />
               </div>
             </div>
 
             <div className="space-y-2">
               <Label htmlFor="plan">Interested Plan *</Label>
-              <Select name="plan" required>
-                <SelectTrigger className="bg-gray-950 border-gray-800 text-white">
-                  <SelectValue placeholder="Select a plan" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="startup">Startup - $299/mo</SelectItem>
-                  <SelectItem value="growth">Growth Agencies - $699/mo</SelectItem>
-                  <SelectItem value="enterprise">Enterprise - $1,999/mo</SelectItem>
-                  <SelectItem value="custom">Custom Enterprise</SelectItem>
-                </SelectContent>
-              </Select>
+              <Select
+                name="plan"
+                required
+                className="bg-gray-950 border-gray-800 text-white"
+                options={[
+                  { value: "", label: "Select a plan", disabled: true },
+                  { value: "startup", label: "Startup - $299/mo" },
+                  { value: "growth", label: "Growth Agencies - $699/mo" },
+                  { value: "enterprise", label: "Enterprise - $1,999/mo" },
+                  { value: "custom", label: "Custom Enterprise" }
+                ]}
+              />
             </div>
 
             <div className="space-y-2">
