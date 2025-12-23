@@ -3,7 +3,7 @@
 import { Document } from '@langchain/core/documents';
 import Navbar from './Navbar';
 import Chat from './Chat';
-import EmptyChat from './EmptyChat';
+import ChatHomepage from './ChatHomepage';
 import { Settings } from 'lucide-react';
 import Link from 'next/link';
 import NextError from 'next/error';
@@ -79,7 +79,7 @@ const ChatWindow = ({ background }: { background?: string }) => {
             <Chat />
           </>
         ) : (
-          <EmptyChat background={background} />
+          <ChatHomepage background={background} />
         )}
       </div>
     )

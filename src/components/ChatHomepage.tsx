@@ -7,6 +7,7 @@ import { File } from './ChatWindow';
 import Link from 'next/link';
 import WeatherWidget from './WeatherWidget';
 import NewsArticleWidget from './NewsArticleWidget';
+import Footer, { defaultFooterLinks } from './Footer';
 import SettingsButtonMobile from '@/components/Settings/SettingsButtonMobile';
 import {
   getShowNewsWidget,
@@ -91,6 +92,7 @@ const EmptyChat = ({ background }: { background?: string }) => {
           )} */}
         </div>
       </div>
+      <Footer listFooterLinks={defaultFooterLinks} />
     </div>
   );
 };
