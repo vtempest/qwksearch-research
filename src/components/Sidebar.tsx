@@ -45,8 +45,8 @@ const Sidebar = ({ children }: { children: React.ReactNode }) => {
     {
       icon: null,
       customIcon: '/icons/icon-news-title.svg',
-      href: '/discover',
-      active: segments.includes('discover'),
+      href: '/news',
+      active: segments.includes('news'),
       label: 'News Feed',
     },
     {

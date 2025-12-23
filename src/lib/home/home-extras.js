@@ -31,7 +31,6 @@ export function getBackgroundArtwork() {
     "sTMPtQW.png", // nebula waves with graph
     "m0gHbZZ.png", // moon phases ass circle ring
     "cKu7dWQ.png", // colorful tunnel into circle
-    "jljejNv.png", // circle ring with color dots
     "ogfefYD.png", // golden gate bridge wires
     "ey5vAae.png", // abstract rectangle on bw
     "kjKN60y.png", // flying balloons in sky

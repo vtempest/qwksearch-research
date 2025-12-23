@@ -83,12 +83,12 @@ const MessageBox = ({
           {section.sourceMessage &&
             section.sourceMessage.sources.length > 0 && (
               <div className="flex flex-col space-y-2">
-                <div className="flex flex-row items-center space-x-2">
+                {/* <div className="flex flex-row items-center space-x-2">
                   <BookCopy className="text-foreground" size={20} />
                   <h3 className="text-foreground font-medium text-xl">
                     Sources
                   </h3>
-                </div>
+                </div> */}
                 <MessageSources sources={section.sourceMessage.sources} />
               </div>
             )}
@@ -96,16 +96,6 @@ const MessageBox = ({
           <div className="flex flex-col space-y-2">
             {section.sourceMessage && (
               <div className="flex flex-row items-center space-x-2">
-                <Disc3
-                  className={cn(
-                    'text-foreground',
-                    isLast && loading ? 'animate-spin' : 'animate-none',
-                  )}
-                  size={20}
-                />
-                <h3 className="text-foreground font-medium text-xl">
-                  Answer
-                </h3>
               </div>
             )}
 
@@ -166,7 +156,7 @@ const MessageBox = ({
                           size={20}
                         />
                         <h3 className="text-foreground font-medium text-xl">
-                          Related
+                          Follow-up Questions
                         </h3>
                       </div>
                       <div className="space-y-0">

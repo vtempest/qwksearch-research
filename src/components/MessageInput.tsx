@@ -79,17 +79,17 @@ const MessageInput = () => {
         className="transition bg-transparent placeholder:text-muted-foreground placeholder:text-sm text-sm text-foreground resize-none focus:outline-none w-full px-2 max-h-24 lg:max-h-36 xl:max-h-48 flex-grow flex-shrink"
         placeholder="Ask a follow-up"
       />
-      {/* {mode === 'single' && (
+      {mode === 'single' && (
         <div className="flex flex-row items-center space-x-4">
-          <CopilotToggle
+          {/* <CopilotToggle
             copilotEnabled={copilotEnabled}
             setCopilotEnabled={setCopilotEnabled}
-          />
+          /> */}
           <button
             disabled={message.trim().length === 0 || loading}
             className="bg-primary text-primary-foreground disabled:text-muted-foreground hover:bg-primary/85 transition duration-100 disabled:bg-muted rounded-full p-2"
           >
-            <ArrowUp className="bg-background" size={17} />
+            <ArrowUp size={17} />
           </button>
         </div>
       )}
@@ -97,19 +97,19 @@ const MessageInput = () => {
         <div className="flex flex-row items-center justify-between w-full pt-2">
           <AttachSmall />
           <div className="flex flex-row items-center space-x-4">
-            <CopilotToggle
+            {/* <CopilotToggle
               copilotEnabled={copilotEnabled}
               setCopilotEnabled={setCopilotEnabled}
-            />
+            /> */}
             <button
               disabled={message.trim().length === 0 || loading}
               className="bg-primary text-primary-foreground disabled:text-muted-foreground hover:bg-primary/85 transition duration-100 disabled:bg-muted rounded-full p-2"
             >
-              <ArrowUp className="bg-background" size={17} />
+              <ArrowUp size={17} />
             </button>
           </div>
         </div>
-      )} */}
+      )}
     </form>
   );
 };

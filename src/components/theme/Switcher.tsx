@@ -1,7 +1,7 @@
 'use client';
 import { useTheme } from 'next-themes';
 import { useCallback, useEffect, useState } from 'react';
-import Select from '../ui/Select';
+import { Select } from '../ui/select';
 
 type Theme = 'dark' | 'light' | 'system';
 

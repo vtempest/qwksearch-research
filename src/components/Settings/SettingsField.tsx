@@ -6,7 +6,7 @@ import {
   UIConfigField,
 } from '@/lib/config/types';
 import { useState } from 'react';
-import Select from '../ui/Select';
+import { Select } from '../ui/select';
 import { toast } from 'sonner';
 import { useTheme } from 'next-themes';
 import { Loader2 } from 'lucide-react';

@@ -14,6 +14,7 @@ interface FooterProps {
     listFooterLinks?: FooterLink[];
     optionShowIcons?: boolean;
     optionBackgroundColor?: string;
+    optionColumns?: number;
 }
 
 /**
@@ -26,12 +27,13 @@ export default function Footer({
     listFooterLinks = [],
     optionShowIcons = true,
     optionBackgroundColor = "bg-black/40",
+    optionColumns = 3,
 }: FooterProps) {
     return (
         <div
             className={`absolute bottom-2 left-1/2 -translate-x-1/2 text-slate-200 text-xs z-20 ${optionBackgroundColor} rounded-lg px-2 py-1 shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-wrap items-center justify-center gap-x-6 max-w-[90vw]`}
         >
-            <div className="max-w-4xl mx-auto grid grid-cols-4 gap-2">
+            <div className={`max-w-4xl mx-auto grid grid-cols-3 gap-2`}>
                 {listFooterLinks.map(({ url, text, icon }) => {
                     const IconComponent = icon
                         ? (LucideIcons[icon as keyof typeof LucideIcons] as LucideIcon)
@@ -86,7 +88,8 @@ export const defaultFooterLinks: FooterLink[] = [
     { url: "https://airesearch.js.org/docs/functions", text: "Docs", icon: "HelpCircle" },
     // { url: "/pricing", text: "Pricing", icon: "DollarSign" },
     { url: "https://www.linkedin.com/company/qwksearch/posts/", text: "Blog", icon: "Newspaper" },
-    // { url: "https://discord.gg/SJdBqBz3tV", text: "Support", icon: "MessageCircle" },
+    { url: "https://discord.gg/SJdBqBz3tV", text: "Support", icon: "MessageCircle" },
     { url: "/legal/privacy", text: "Privacy", icon: "Lock" },
     { url: "https://rights.institute", text: "Ethics", icon: "Bot" },
+    { url: "/custom", text: "Enterprise", icon: "Building2" },
 ];

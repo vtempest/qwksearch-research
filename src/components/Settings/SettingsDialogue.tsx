@@ -15,7 +15,7 @@ import Loader from '../ui/Loader';
 import { cn } from '@/lib/utils';
 import Models from './Sections/Models/Section';
 import SearchSection from './Sections/Search';
-import Select from '@/components/ui/Select';
+import { Select } from '@/components/ui/select';
 import Personalization from './Sections/Personalization';
 
 const sections = [
