@@ -14,6 +14,7 @@ dist/
 .vscode/
 .idea/
 *.iml
+
 ai-research-agent/
 # Environment variables
 .env
