@@ -79,7 +79,7 @@ const MessageInput = () => {
         className="transition bg-transparent placeholder:text-muted-foreground placeholder:text-sm text-sm text-foreground resize-none focus:outline-none w-full px-2 max-h-24 lg:max-h-36 xl:max-h-48 flex-grow flex-shrink"
         placeholder="Ask a follow-up"
       />
-      {mode === 'single' && (
+      {/* {mode === 'single' && (
         <div className="flex flex-row items-center space-x-4">
           <CopilotToggle
             copilotEnabled={copilotEnabled}
@@ -109,7 +109,7 @@ const MessageInput = () => {
             </button>
           </div>
         </div>
-      )}
+      )} */}
     </form>
   );
 };
