@@ -346,14 +346,14 @@ const ArticleExtractPanel: React.FC<ArticleExtractPanelProps> = (props) => {
 
   // Render panel content (shared between mobile and desktop)
   const renderPanelContent = () => (
-    <div className="flex h-full flex-col bg-white dark:bg-dark-secondary shadow-xl">
+    <div className="flex h-full flex-col bg-background shadow-xl">
                     {/* Header */}
-                    <div className="flex items-center justify-between bg-light-100 dark:bg-dark-100 px-4 py-3 border-b border-light-200 dark:border-dark-200">
+                    <div className="flex items-center justify-between bg-secondary px-4 py-3 border-b border-border">
                       <button
                         onClick={onClose}
-                        className="rounded-md p-1 hover:bg-light-200 dark:hover:bg-dark-200 transition-colors"
+                        className="rounded-md p-1 hover:bg-accent transition-colors"
                       >
-                        <X className="h-5 w-5 dark:text-white" />
+                        <X className="h-5 w-5" />
                       </button>
                     </div>
 
@@ -398,13 +398,13 @@ const ArticleExtractPanel: React.FC<ArticleExtractPanelProps> = (props) => {
                               <button
                                 onClick={toggleFavorite}
                                 disabled={isLoadingFavorite}
-                                className="ml-2 p-1 hover:bg-light-200 dark:hover:bg-dark-200 rounded transition-colors disabled:opacity-50"
+                                className="ml-2 p-1 hover:bg-accent rounded transition-colors disabled:opacity-50"
                                 title={isFavorited ? 'Remove from favorites' : 'Add to favorites'}
                               >
                                 <Star
                                   className={`h-5 w-5 ${isFavorited
                                     ? 'fill-yellow-400 text-yellow-400'
-                                    : 'text-gray-400'
+                                    : 'text-muted-foreground'
                                     }`}
                                 />
                               </button>
@@ -426,7 +426,7 @@ const ArticleExtractPanel: React.FC<ArticleExtractPanelProps> = (props) => {
                                 }
                                 type="text"
                                 placeholder="Ask AI any question..."
-                                className="w-full px-3 py-2 text-sm rounded-md border border-gray-300 dark:border-dark-200 dark:bg-dark-100 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className="w-full px-3 py-2 text-sm rounded-md border border-input bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
                               />
                             </div>
 
@@ -437,7 +437,7 @@ const ArticleExtractPanel: React.FC<ArticleExtractPanelProps> = (props) => {
                                   onClick={() =>
                                     handleQuestionClick(defaultSummarizePrompt)
                                   }
-                                  className="cursor-pointer rounded-md p-2 text-sm font-semibold hover:bg-slate-100 dark:hover:bg-gray-800 border border-slate-300 dark:border-dark-200 transition-colors"
+                                  className="cursor-pointer rounded-md p-2 text-sm font-semibold hover:bg-accent border border-border transition-colors"
                                 >
                                   {defaultSummarizePrompt}
                                 </div>
@@ -445,7 +445,7 @@ const ArticleExtractPanel: React.FC<ArticleExtractPanelProps> = (props) => {
                                   <div
                                     key={i}
                                     onClick={() => handleQuestionClick(question)}
-                                    className="cursor-pointer rounded-md p-2 text-sm font-semibold hover:bg-slate-100 dark:hover:bg-gray-800 border border-slate-300 dark:border-dark-200 transition-colors"
+                                    className="cursor-pointer rounded-md p-2 text-sm font-semibold hover:bg-accent border border-border transition-colors"
                                     dangerouslySetInnerHTML={{ __html: question }}
                                   />
                                 ))}
@@ -487,7 +487,7 @@ const ArticleExtractPanel: React.FC<ArticleExtractPanelProps> = (props) => {
                           </div>
 
                           {/* Article Content Section */}
-                          <div className="border-t border-light-200 dark:border-dark-200 pt-6">
+                          <div className="border-t border-border pt-6">
                             {/* Extracted Article */}
                             {extractedArticle && (
                               <div>
@@ -498,13 +498,13 @@ const ArticleExtractPanel: React.FC<ArticleExtractPanelProps> = (props) => {
                                 {/* Citation Information */}
                                 {extractedArticle.cite && (
                                   <div
-                                    className="mb-3 text-sm text-gray-600 dark:text-gray-400"
+                                    className="mb-3 text-sm text-muted-foreground"
                                     dangerouslySetInnerHTML={{ __html: extractedArticle.cite }}
                                   />
                                 )}
 
                                 {/* Metadata */}
-                                <div className="mb-3 text-xs text-gray-500 dark:text-gray-500 space-y-1">
+                                <div className="mb-3 text-xs text-muted-foreground space-y-1">
 
                                   {extractedArticle.word_count && (
                                     <p>
@@ -517,7 +517,7 @@ const ArticleExtractPanel: React.FC<ArticleExtractPanelProps> = (props) => {
                                 {/* Article HTML Content */}
                                 <div
                                   id="article-content"
-                                  className="prose dark:prose-invert max-w-none text-md dark:text-white leading-relaxed"
+                                  className="prose dark:prose-invert max-w-none text-md text-foreground leading-relaxed"
                                   dangerouslySetInnerHTML={{
                                     __html: extractedArticle.html || '',
                                   }}
@@ -570,10 +570,10 @@ const ArticleExtractPanel: React.FC<ArticleExtractPanelProps> = (props) => {
                     <div
                       ref={resizeRef}
                       onMouseDown={() => setIsResizing(true)}
-                      className="absolute left-0 top-0 bottom-0 w-1 cursor-ew-resize hover:bg-blue-500 bg-transparent transition-colors z-50"
+                      className="absolute left-0 top-0 bottom-0 w-1 cursor-ew-resize hover:bg-primary bg-transparent transition-colors z-50"
                       style={{ touchAction: 'none' }}
                     >
-                      <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-1 h-12 rounded-full bg-gray-400 dark:bg-gray-600 opacity-50 hover:opacity-100 transition-opacity" />
+                      <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-1 h-12 rounded-full bg-muted-foreground opacity-50 hover:opacity-100 transition-opacity" />
                     </div>
 
                     {renderPanelContent()}
@@ -597,10 +597,10 @@ const ArticleExtractPanel: React.FC<ArticleExtractPanelProps> = (props) => {
       <div
         ref={resizeRef}
         onMouseDown={() => setIsResizing(true)}
-        className="absolute left-0 top-0 bottom-0 w-1 cursor-ew-resize hover:bg-blue-500 bg-transparent transition-colors z-50"
+        className="absolute left-0 top-0 bottom-0 w-1 cursor-ew-resize hover:bg-primary bg-transparent transition-colors z-50"
         style={{ touchAction: 'none' }}
       >
-        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-1 h-12 rounded-full bg-gray-400 dark:bg-gray-600 opacity-50 hover:opacity-100 transition-opacity" />
+        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-1 h-12 rounded-full bg-muted-foreground opacity-50 hover:opacity-100 transition-opacity" />
       </div>
 
       {renderPanelContent()}
