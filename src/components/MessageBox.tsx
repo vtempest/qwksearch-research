@@ -75,10 +75,10 @@ const MessageBox = ({
         </h2>
       </div>
 
-      <div className="flex flex-col space-y-9 lg:space-y-0 lg:flex-row lg:justify-between lg:space-x-9">
+      <div className="flex flex-col space-y-6">
         <div
           ref={dividerRef}
-          className="flex flex-col space-y-6 w-full lg:w-9/12"
+          className="flex flex-col space-y-6 w-full"
         >
           {section.sourceMessage &&
             section.sourceMessage.sources.length > 0 && (
@@ -92,6 +92,25 @@ const MessageBox = ({
                 <MessageSources sources={section.sourceMessage.sources} />
               </div>
             )}
+
+          {section.assistantMessage && (
+            <div className="flex flex-col lg:flex-row gap-3 w-full">
+              <div className="w-full lg:w-1/2">
+                <SearchImages
+                  query={section.userMessage.content}
+                  chatHistory={chatTurns.slice(0, sectionIndex * 2)}
+                  messageId={section.assistantMessage.messageId}
+                />
+              </div>
+              <div className="w-full lg:w-1/2">
+                <SearchVideos
+                  chatHistory={chatTurns.slice(0, sectionIndex * 2)}
+                  query={section.userMessage.content}
+                  messageId={section.assistantMessage.messageId}
+                />
+              </div>
+            </div>
+          )}
 
           <div className="flex flex-col space-y-2">
             {section.sourceMessage && (
@@ -190,21 +209,6 @@ const MessageBox = ({
             )}
           </div>
         </div>
-
-        {section.assistantMessage && (
-          <div className="lg:sticky lg:top-20 flex flex-col items-center space-y-3 w-full lg:w-3/12 z-30 h-full pb-4">
-            <SearchImages
-              query={section.userMessage.content}
-              chatHistory={chatTurns.slice(0, sectionIndex * 2)}
-              messageId={section.assistantMessage.messageId}
-            />
-            <SearchVideos
-              chatHistory={chatTurns.slice(0, sectionIndex * 2)}
-              query={section.userMessage.content}
-              messageId={section.assistantMessage.messageId}
-            />
-          </div>
-        )}
       </div>
     </div>
   );

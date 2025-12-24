@@ -10,11 +10,11 @@ import { Document } from '@langchain/core/documents';
 import { File } from 'lucide-react';
 import { Fragment, useState, useEffect } from 'react';
 import ArticleExtractPanel from './ArticleExtractPanel';
+import { useExtractPanel } from '@/contexts/ExtractPanelContext';
 
 const MessageSources = ({ sources }: { sources: Document[] }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [isExtractPanelOpen, setIsExtractPanelOpen] = useState(false);
-  const [selectedUrl, setSelectedUrl] = useState('');
+  const { openPanel, closePanel, isOpen } = useExtractPanel();
 
   // Check for extract parameter in URL on mount
   useEffect(() => {
@@ -22,11 +22,20 @@ const MessageSources = ({ sources }: { sources: Document[] }) => {
       const params = new URLSearchParams(window.location.search);
       const extractUrl = params.get('extract');
       if (extractUrl) {
-        setSelectedUrl(decodeURIComponent(extractUrl));
-        setIsExtractPanelOpen(true);
+        openPanel(decodeURIComponent(extractUrl), '');
       }
     }
-  }, []);
+  }, [openPanel]);
+
+  // Auto-open first source by default
+  useEffect(() => {
+    if (sources && sources.length > 0 && !isOpen) {
+      const firstSource = sources[0];
+      if (firstSource?.metadata?.url) {
+        openPanel(firstSource.metadata.url, '');
+      }
+    }
+  }, [sources, isOpen, openPanel]);
 
   const closeModal = () => {
     setIsDialogOpen(false);
@@ -40,30 +49,7 @@ const MessageSources = ({ sources }: { sources: Document[] }) => {
 
   const handleSourceClick = (e: React.MouseEvent, url: string) => {
     e.preventDefault();
-    setSelectedUrl(url);
-    setIsExtractPanelOpen(true);
-
-    // Update URL parameter
-    if (typeof window !== 'undefined') {
-      const params = new URLSearchParams(window.location.search);
-      params.set('extract', encodeURIComponent(url));
-      const newUrl = `${window.location.pathname}?${params.toString()}`;
-      window.history.pushState({}, '', newUrl);
-    }
-  };
-
-  const handleCloseExtractPanel = () => {
-    setIsExtractPanelOpen(false);
-
-    // Remove extract parameter from URL
-    if (typeof window !== 'undefined') {
-      const params = new URLSearchParams(window.location.search);
-      params.delete('extract');
-      const newUrl = params.toString()
-        ? `${window.location.pathname}?${params.toString()}`
-        : window.location.pathname;
-      window.history.pushState({}, '', newUrl);
-    }
+    openPanel(url, '');
   };
 
   return (
@@ -202,12 +188,7 @@ const MessageSources = ({ sources }: { sources: Document[] }) => {
         </Dialog>
       </Transition>
 
-      <ArticleExtractPanel
-        isOpen={isExtractPanelOpen}
-        onClose={handleCloseExtractPanel}
-        url={selectedUrl}
-        searchText=""
-      />
+      <ArticleExtractPanel />
     </>
   );
 };

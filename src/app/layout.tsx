@@ -13,7 +13,8 @@ import SetupWizard from '@/components/Setup/SetupWizard';
 import { ChatProvider } from '@/lib/hooks/useChat';
 import GoogleOneTap from '@/components/GoogleOneTap';
 import { SessionProvider } from '@/lib/hooks/useSession';
-import { ThemeProvider } from "@/components/theme-provider"
+import { ThemeProvider } from "@/components/theme-provider";
+import { ExtractPanelProvider } from '@/contexts/ExtractPanelContext';
 
 export const metadata: Metadata = {
   title: 'QwkSearch - Chat with the internet',
@@ -42,19 +43,21 @@ export default async function RootLayout({
           disableTransitionOnChange
         >          <SessionProvider>
             {/* {setupComplete ? ( */}
-            <ChatProvider>
-              <GoogleOneTap />
-              <Sidebar>{children}</Sidebar>
-              <Toaster
-                toastOptions={{
-                  unstyled: true,
-                  classNames: {
-                    toast:
-                      'bg-light-secondary dark:bg-dark-secondary dark:text-white/70 text-black-70 rounded-lg p-4 flex flex-row items-center space-x-2',
-                  },
-                }}
-              />
-            </ChatProvider>
+            <ExtractPanelProvider>
+              <ChatProvider>
+                <GoogleOneTap />
+                <Sidebar>{children}</Sidebar>
+                <Toaster
+                  toastOptions={{
+                    unstyled: true,
+                    classNames: {
+                      toast:
+                        'bg-light-secondary dark:bg-dark-secondary dark:text-white/70 text-black-70 rounded-lg p-4 flex flex-row items-center space-x-2',
+                    },
+                  }}
+                />
+              </ChatProvider>
+            </ExtractPanelProvider>
             {/* ) : (
               <SetupWizard configSections={configSections} />
             )} */}
