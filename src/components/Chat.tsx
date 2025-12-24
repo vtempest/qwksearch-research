@@ -73,7 +73,7 @@ const Chat = () => {
   // Calculate input box positioning to account for extract panel
   const inputBoxStyle = isDesktop && isPanelOpen
     ? {
-        width: `calc(100vw - ${panelWidth}px - 4rem)`,
+        width: `calc(100vw - ${panelWidth}px - 8rem)`,
       }
     : { width: dividerWidth };
 
@@ -107,7 +107,7 @@ const Chat = () => {
       <div ref={messageEnd} className="h-0" />
       {dividerWidth > 0 && (
         <div
-          className="bottom-24 lg:bottom-10 fixed z-40 transition-all duration-300"
+          className="bottom-24 lg:bottom-10 fixed z-40 transition-all duration-300 sm:mx-4 md:mx-8"
           style={inputBoxStyle}
         >
           <MessageInput />
