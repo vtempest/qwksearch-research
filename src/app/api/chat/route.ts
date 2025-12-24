@@ -173,6 +173,8 @@ const handleHistorySave = async (
   // Only save to database for authenticated users
   if (!userId) return;
 
+  console.log('[handleHistorySave] Starting chat save for chatId:', message.chatId, 'userId:', userId);
+
   const chat = await db.query.chats.findFirst({
     where: and(eq(chats.id, message.chatId), eq(chats.userId, userId)),
   });
@@ -180,6 +182,7 @@ const handleHistorySave = async (
   const fileData = files.map(getFileDetails);
 
   if (!chat) {
+    console.log('[handleHistorySave] Creating new chat:', message.chatId);
     await db
       .insert(chats)
       .values({
@@ -191,13 +194,16 @@ const handleHistorySave = async (
         files: fileData,
       })
       .execute();
+    console.log('[handleHistorySave] Chat created successfully:', message.chatId);
   } else if (JSON.stringify(chat.files ?? []) != JSON.stringify(fileData)) {
+    console.log('[handleHistorySave] Updating chat files for:', message.chatId);
     await db.update(chats)
       .set({
         files: files.map(getFileDetails),
       })
       .where(eq(chats.id, message.chatId))
       .execute();
+    console.log('[handleHistorySave] Chat files updated:', message.chatId);
   }
 
   const messageExists = await db.query.messages.findFirst({
@@ -300,7 +306,10 @@ export const POST = async (req: Request) => {
     const encoder = new TextEncoder();
 
     handleEmitterEvents(stream, writer, encoder, message.chatId, userId);
+
+    console.log('[POST /api/chat] Awaiting handleHistorySave for chatId:', message.chatId);
     await handleHistorySave(message, humanMessageId, body.focusMode, body.files, userId);
+    console.log('[POST /api/chat] handleHistorySave completed, returning stream response');
 
     return new Response(responseStream.readable, {
       headers: {
