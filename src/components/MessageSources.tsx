@@ -14,7 +14,7 @@ import { useExtractPanel } from '@/contexts/ExtractPanelContext';
 
 const MessageSources = ({ sources }: { sources: Document[] }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const { openPanel, closePanel } = useExtractPanel();
+  const { openPanel, closePanel, isOpen } = useExtractPanel();
 
   // Check for extract parameter in URL on mount
   useEffect(() => {
@@ -26,6 +26,16 @@ const MessageSources = ({ sources }: { sources: Document[] }) => {
       }
     }
   }, [openPanel]);
+
+  // Auto-open first source by default
+  useEffect(() => {
+    if (sources && sources.length > 0 && !isOpen) {
+      const firstSource = sources[0];
+      if (firstSource?.metadata?.url) {
+        openPanel(firstSource.metadata.url, '');
+      }
+    }
+  }, [sources, isOpen, openPanel]);
 
   const closeModal = () => {
     setIsDialogOpen(false);
