@@ -1,5 +1,5 @@
 import configManager from './index';
-import { ConfigModelProvider } from './types';
+import { ConfigModelProvider, MCPServerConfig } from './types';
 
 export const getConfiguredModelProviders = (): ConfigModelProvider[] => {
   return configManager.getConfig('modelProviders', []);
@@ -16,3 +16,17 @@ export const getSearxngURL = () =>
 
 export const getTavilyApiKey = () =>
   configManager.getConfig('search.tavilyApiKey', '');
+
+export const getConfiguredMCPServers = (): MCPServerConfig[] => {
+  return configManager.getConfig('mcpServers', []);
+};
+
+export const getConfiguredMCPServerById = (
+  id: string,
+): MCPServerConfig | undefined => {
+  return getConfiguredMCPServers().find((s) => s.id === id) ?? undefined;
+};
+
+export const getEnabledMCPServers = (): MCPServerConfig[] => {
+  return getConfiguredMCPServers().filter((s) => s.enabled);
+};

@@ -59,6 +59,17 @@ type ConfigModelProvider = {
   hash: string;
 };
 
+type MCPServerConfig = {
+  id: string;
+  name: string;
+  type: string;
+  url?: string;
+  apiKey?: string;
+  config: { [key: string]: any };
+  enabled: boolean;
+  hash: string;
+};
+
 type Config = {
   version: number;
   setupComplete: boolean;
@@ -69,6 +80,7 @@ type Config = {
     [key: string]: any;
   };
   modelProviders: ConfigModelProvider[];
+  mcpServers: MCPServerConfig[];
   search: {
     [key: string]: any;
   };
@@ -87,10 +99,17 @@ type ModelProviderUISection = {
   fields: UIConfigField[];
 };
 
+type MCPServerUISection = {
+  name: string;
+  key: string;
+  fields: UIConfigField[];
+};
+
 type UIConfigSections = {
   preferences: UIConfigField[];
   personalization: UIConfigField[];
   modelProviders: ModelProviderUISection[];
+  mcpServers: MCPServerUISection[];
   search: UIConfigField[];
 };
 
@@ -102,7 +121,9 @@ export type {
   SelectUIConfigField,
   StringUIConfigField,
   ModelProviderUISection,
+  MCPServerUISection,
   ConfigModelProvider,
+  MCPServerConfig,
   TextareaUIConfigField,
   SwitchUIConfigField,
 };
