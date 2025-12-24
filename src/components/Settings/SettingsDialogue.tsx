@@ -4,6 +4,7 @@ import {
   BrainCog,
   ChevronLeft,
   Search,
+  Server,
   Sliders,
   ToggleRight,
 } from 'lucide-react';
@@ -14,6 +15,7 @@ import { toast } from 'sonner';
 import Loader from '../ui/Loader';
 import { cn } from '@/lib/utils';
 import Models from './Sections/Models/Section';
+import MCPServers from './Sections/MCPServers/Section';
 import SearchSection from './Sections/Search';
 import { Select } from '@/components/ui/select';
 import Personalization from './Sections/Personalization';
@@ -42,6 +44,14 @@ const sections = [
     icon: BrainCog,
     component: Models,
     dataAdd: 'modelProviders',
+  },
+  {
+    key: 'mcpservers',
+    name: 'MCP Servers',
+    description: 'Configure Model Context Protocol servers.',
+    icon: Server,
+    component: MCPServers,
+    dataAdd: 'mcpServers',
   },
   {
     key: 'search',

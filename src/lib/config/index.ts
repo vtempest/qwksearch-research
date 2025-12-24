@@ -1,8 +1,14 @@
 import path from 'node:path';
 import fs from 'fs';
-import { Config, ConfigModelProvider, UIConfigSections } from './types';
+import {
+  Config,
+  ConfigModelProvider,
+  MCPServerConfig,
+  UIConfigSections,
+} from './types';
 import { hashObj } from '../serverUtils';
 import { getModelProvidersUIConfigSection } from '../models/providers';
+import { getMCPServersUIConfigSection } from '../mcpservers';
 
 class ConfigManager {
   configPath: string = path.join(
@@ -17,6 +23,7 @@ class ConfigManager {
     preferences: {},
     personalization: {},
     modelProviders: [],
+    mcpServers: [],
     search: {
       searxngURL: '',
       tavilyApiKey: '',
@@ -103,6 +110,7 @@ class ConfigManager {
       },
     ],
     modelProviders: [],
+    mcpServers: [],
     search: [
       {
         name: 'SearXNG URL',
@@ -285,6 +293,11 @@ class ConfigManager {
 
     this.uiConfigSections.modelProviders = providerConfigSections;
 
+    /* MCP servers section */
+    const mcpServerConfigSections = getMCPServersUIConfigSection();
+
+    this.uiConfigSections.mcpServers = mcpServerConfigSections;
+
     const newProviders: ConfigModelProvider[] = [];
 
     providerConfigSections.forEach((provider) => {
@@ -335,6 +348,57 @@ class ConfigManager {
       this.currentConfig.modelProviders.push(...newProviders);
     }
 
+    /* MCP servers initialization */
+    const newMCPServers: MCPServerConfig[] = [];
+
+    mcpServerConfigSections.forEach((server) => {
+      const tempConfig: Record<string, any> = {};
+      const required: string[] = [];
+
+      server.fields.forEach((field) => {
+        tempConfig[field.key] =
+          process.env[field.env!] ||
+          field.default ||
+          ''; /* Env var must exist for MCP servers */
+
+        if (field.required) required.push(field.key);
+      });
+
+      let configured = true;
+
+      required.forEach((r) => {
+        if (!tempConfig[r]) {
+          configured = false;
+        }
+      });
+
+      if (configured) {
+        const hash = hashObj(tempConfig);
+
+        // Use hash as ID for deterministic MCP server IDs
+        const exists = this.currentConfig.mcpServers.find(
+          (s) => s.hash === hash,
+        );
+
+        if (!exists) {
+          const newMCPServer: MCPServerConfig = {
+            id: hash,
+            name: `${server.name}`,
+            type: server.key,
+            config: tempConfig,
+            enabled: true,
+            hash: hash,
+          };
+
+          newMCPServers.push(newMCPServer);
+        }
+      }
+    });
+
+    if (newMCPServers.length > 0) {
+      this.currentConfig.mcpServers.push(...newMCPServers);
+    }
+
     /* search section */
     let searchChanged = false;
     this.uiConfigSections.search.forEach((f) => {
@@ -345,7 +409,7 @@ class ConfigManager {
       }
     });
 
-    if (newProviders.length > 0 || searchChanged) {
+    if (newProviders.length > 0 || newMCPServers.length > 0 || searchChanged) {
       this.saveConfig();
     }
   }
@@ -466,6 +530,63 @@ class ConfigManager {
     );
 
     this.saveConfig();
+  }
+
+  public addMCPServer(type: string, name: string, config: any) {
+    const hash = hashObj(config);
+
+    const newMCPServer: MCPServerConfig = {
+      id: hash,
+      name,
+      type,
+      config,
+      enabled: true,
+      hash: hash,
+    };
+
+    this.currentConfig.mcpServers.push(newMCPServer);
+    this.saveConfig();
+
+    return newMCPServer;
+  }
+
+  public removeMCPServer(id: string) {
+    const index = this.currentConfig.mcpServers.findIndex((s) => s.id === id);
+
+    if (index === -1) return;
+
+    this.currentConfig.mcpServers = this.currentConfig.mcpServers.filter(
+      (s) => s.id !== id,
+    );
+
+    this.saveConfig();
+  }
+
+  public async updateMCPServer(id: string, name: string, config: any) {
+    const server = this.currentConfig.mcpServers.find((s) => {
+      return s.id === id;
+    });
+
+    if (!server) throw new Error('MCP Server not found');
+
+    server.name = name;
+    server.config = config;
+
+    this.saveConfig();
+
+    return server;
+  }
+
+  public toggleMCPServer(id: string, enabled: boolean) {
+    const server = this.currentConfig.mcpServers.find((s) => s.id === id);
+
+    if (!server) throw new Error('MCP Server not found');
+
+    server.enabled = enabled;
+
+    this.saveConfig();
+
+    return server;
   }
 
   public isSetupComplete() {
