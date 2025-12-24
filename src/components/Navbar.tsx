@@ -11,6 +11,7 @@ import {
 } from '@headlessui/react';
 import jsPDF from 'jspdf';
 import { useChat, Section } from '@/lib/hooks/useChat';
+import { useExtractPanel } from '@/contexts/ExtractPanelContext';
 
 const downloadFile = (filename: string, content: string, type: string) => {
   const blob = new Blob([content], { type });
@@ -194,8 +195,20 @@ const exportAsPDF = (sections: Section[], title: string) => {
 const Navbar = () => {
   const [title, setTitle] = useState<string>('');
   const [timeAgo, setTimeAgo] = useState<string>('');
+  const [isDesktop, setIsDesktop] = useState(false);
 
   const { sections, chatId } = useChat();
+  const { isOpen: isPanelOpen, panelWidth } = useExtractPanel();
+
+  // Track window width for desktop/mobile layout (1024px matches Tailwind lg: breakpoint)
+  useEffect(() => {
+    const checkDesktop = () => {
+      setIsDesktop(window.innerWidth >= 1024);
+    };
+    checkDesktop();
+    window.addEventListener('resize', checkDesktop);
+    return () => window.removeEventListener('resize', checkDesktop);
+  }, []);
 
   useEffect(() => {
     if (sections.length > 0 && sections[0].userMessage) {
@@ -227,8 +240,16 @@ const Navbar = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Calculate container style based on panel state
+  const containerStyle = isDesktop && isPanelOpen
+    ? { marginRight: `${panelWidth}px` }
+    : {};
+
   return (
-    <div className="sticky -mx-4 lg:mx-0 top-0 z-40 bg-background/95 backdrop-blur-sm border-b border-border/50">
+    <div
+      className="sticky -mx-4 lg:mx-0 top-0 z-40 bg-background/95 backdrop-blur-sm border-b border-border/50 transition-all duration-300"
+      style={containerStyle}
+    >
       <div className="px-4 lg:px-6 py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center min-w-0">

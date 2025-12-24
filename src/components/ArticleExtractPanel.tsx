@@ -16,6 +16,7 @@ import {
   TransitionChild,
 } from '@headlessui/react';
 import { Fragment } from 'react';
+import { useExtractPanel } from '@/contexts/ExtractPanelContext';
 
 interface Article {
   html?: string;
@@ -40,18 +41,28 @@ interface ChatMessage {
 }
 
 interface ArticleExtractPanelProps {
-  isOpen: boolean;
-  onClose: () => void;
-  url: string;
+  isOpen?: boolean;
+  onClose?: () => void;
+  url?: string;
   searchText?: string;
 }
 
-const ArticleExtractPanel: React.FC<ArticleExtractPanelProps> = ({
-  isOpen,
-  onClose,
-  url,
-  searchText = '',
-}) => {
+const ArticleExtractPanel: React.FC<ArticleExtractPanelProps> = (props) => {
+  // Use context for state management
+  const {
+    isOpen: contextIsOpen,
+    url: contextUrl,
+    searchText: contextSearchText,
+    panelWidth: contextPanelWidth,
+    setPanelWidth: contextSetPanelWidth,
+    closePanel,
+  } = useExtractPanel();
+
+  // Use props if provided (for backwards compatibility), otherwise use context
+  const isOpen = props.isOpen !== undefined ? props.isOpen : contextIsOpen;
+  const onClose = props.onClose || closePanel;
+  const url = props.url || contextUrl;
+  const searchText = props.searchText !== undefined ? props.searchText : contextSearchText;
   const defaultSummarizePrompt = 'Summarize in bullet points and bold topics';
   const MAX_ARTICLE_LENGTH = 1500;
   const MAX_FOLLOWUP_QUESTIONS = 4;
@@ -71,14 +82,14 @@ const ArticleExtractPanel: React.FC<ArticleExtractPanelProps> = ({
   const [isFavorited, setIsFavorited] = useState(false);
   const [isLoadingFavorite, setIsLoadingFavorite] = useState(false);
   const [isDesktop, setIsDesktop] = useState(false);
-  const [panelWidth, setPanelWidth] = useState(600);
+  const [panelWidth, setPanelWidth] = useState(contextPanelWidth);
   const [isResizing, setIsResizing] = useState(false);
   const resizeRef = useRef<HTMLDivElement>(null);
 
-  // Track window width for desktop/mobile layout
+  // Track window width for desktop/mobile layout (1024px matches Tailwind lg: breakpoint)
   useEffect(() => {
     const checkDesktop = () => {
-      setIsDesktop(window.innerWidth > 800);
+      setIsDesktop(window.innerWidth >= 1024);
     };
     checkDesktop();
     window.addEventListener('resize', checkDesktop);
@@ -90,7 +101,9 @@ const ArticleExtractPanel: React.FC<ArticleExtractPanelProps> = ({
     const handleMouseMove = (e: MouseEvent) => {
       if (!isResizing) return;
       const newWidth = window.innerWidth - e.clientX;
-      setPanelWidth(Math.max(400, Math.min(newWidth, window.innerWidth - 100)));
+      const clampedWidth = Math.max(400, Math.min(newWidth, window.innerWidth - 100));
+      setPanelWidth(clampedWidth);
+      contextSetPanelWidth(clampedWidth);
     };
 
     const handleMouseUp = () => {
@@ -110,7 +123,7 @@ const ArticleExtractPanel: React.FC<ArticleExtractPanelProps> = ({
       document.body.style.cursor = '';
       document.body.style.userSelect = '';
     };
-  }, [isResizing]);
+  }, [isResizing, contextSetPanelWidth]);
 
   // Extract URL content when panel opens
   useEffect(() => {
@@ -331,48 +344,9 @@ const ArticleExtractPanel: React.FC<ArticleExtractPanelProps> = ({
     // For now, just a placeholder
   };
 
-  return (
-    <Transition appear show={isOpen} as={Fragment}>
-      <Dialog as="div" className="relative z-50" onClose={onClose}>
-        <TransitionChild
-          as={Fragment}
-          enter="ease-out duration-300"
-          enterFrom="opacity-0"
-          enterTo="opacity-100"
-          leave="ease-in duration-200"
-          leaveFrom="opacity-100"
-          leaveTo="opacity-0"
-        >
-          <div className="fixed inset-0 bg-black/25" />
-        </TransitionChild>
-
-        <div className="fixed inset-0 overflow-hidden">
-          <div className="absolute inset-0 overflow-hidden">
-            <div className="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10">
-              <TransitionChild
-                as={Fragment}
-                enter="transform transition ease-in-out duration-300"
-                enterFrom="translate-x-full"
-                enterTo="translate-x-0"
-                leave="transform transition ease-in-out duration-300"
-                leaveFrom="translate-x-0"
-                leaveTo="translate-x-full"
-              >
-                <DialogPanel
-                  className="pointer-events-auto relative"
-                  style={{ width: `${panelWidth}px` }}
-                >
-                  {/* Horizontal Resize Handle */}
-                  <div
-                    ref={resizeRef}
-                    onMouseDown={() => setIsResizing(true)}
-                    className="absolute left-0 top-0 bottom-0 w-1 cursor-ew-resize hover:bg-blue-500 bg-transparent transition-colors z-50"
-                    style={{ touchAction: 'none' }}
-                  >
-                    <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-1 h-12 rounded-full bg-gray-400 dark:bg-gray-600 opacity-50 hover:opacity-100 transition-opacity" />
-                  </div>
-
-                  <div className="flex h-full flex-col bg-white dark:bg-dark-secondary shadow-xl">
+  // Render panel content (shared between mobile and desktop)
+  const renderPanelContent = () => (
+    <div className="flex h-full flex-col bg-white dark:bg-dark-secondary shadow-xl">
                     {/* Header */}
                     <div className="flex items-center justify-between bg-light-100 dark:bg-dark-100 px-4 py-3 border-b border-light-200 dark:border-dark-200">
                       <button
@@ -555,13 +529,82 @@ const ArticleExtractPanel: React.FC<ArticleExtractPanelProps> = ({
                       )}
                     </div>
                   </div>
-                </DialogPanel>
-              </TransitionChild>
+  );
+
+  if (!isOpen) return null;
+
+  // Mobile: Use Dialog overlay (same as before)
+  if (!isDesktop) {
+    return (
+      <Transition appear show={isOpen} as={Fragment}>
+        <Dialog as="div" className="relative z-50" onClose={onClose}>
+          <TransitionChild
+            as={Fragment}
+            enter="ease-out duration-300"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
+            leave="ease-in duration-200"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+          >
+            <div className="fixed inset-0 bg-black/25" />
+          </TransitionChild>
+
+          <div className="fixed inset-0 overflow-hidden">
+            <div className="absolute inset-0 overflow-hidden">
+              <div className="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10">
+                <TransitionChild
+                  as={Fragment}
+                  enter="transform transition ease-in-out duration-300"
+                  enterFrom="translate-x-full"
+                  enterTo="translate-x-0"
+                  leave="transform transition ease-in-out duration-300"
+                  leaveFrom="translate-x-0"
+                  leaveTo="translate-x-full"
+                >
+                  <DialogPanel
+                    className="pointer-events-auto relative"
+                    style={{ width: `${panelWidth}px` }}
+                  >
+                    {/* Horizontal Resize Handle */}
+                    <div
+                      ref={resizeRef}
+                      onMouseDown={() => setIsResizing(true)}
+                      className="absolute left-0 top-0 bottom-0 w-1 cursor-ew-resize hover:bg-blue-500 bg-transparent transition-colors z-50"
+                      style={{ touchAction: 'none' }}
+                    >
+                      <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-1 h-12 rounded-full bg-gray-400 dark:bg-gray-600 opacity-50 hover:opacity-100 transition-opacity" />
+                    </div>
+
+                    {renderPanelContent()}
+                  </DialogPanel>
+                </TransitionChild>
+              </div>
             </div>
           </div>
-        </div>
-      </Dialog>
-    </Transition>
+        </Dialog>
+      </Transition>
+    );
+  }
+
+  // Desktop: Fixed column on the right
+  return (
+    <div
+      className="fixed top-0 right-0 h-screen z-40 transition-all duration-300"
+      style={{ width: `${panelWidth}px` }}
+    >
+      {/* Horizontal Resize Handle */}
+      <div
+        ref={resizeRef}
+        onMouseDown={() => setIsResizing(true)}
+        className="absolute left-0 top-0 bottom-0 w-1 cursor-ew-resize hover:bg-blue-500 bg-transparent transition-colors z-50"
+        style={{ touchAction: 'none' }}
+      >
+        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-1 h-12 rounded-full bg-gray-400 dark:bg-gray-600 opacity-50 hover:opacity-100 transition-opacity" />
+      </div>
+
+      {renderPanelContent()}
+    </div>
   );
 };
 
