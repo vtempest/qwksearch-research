@@ -8,4 +8,4 @@ export type MCPTool = {
 
 export type MCPServerType = 'composio' | 'custom';
 
-export { MCPServerMetadata };
+export type { MCPServerMetadata };
