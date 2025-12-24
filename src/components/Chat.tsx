@@ -40,7 +40,7 @@ const Chat = () => {
     return () => {
       window.removeEventListener('resize', updateDividerWidth);
     };
-  }, []);
+  }, [isPanelOpen, panelWidth]);
 
   useEffect(() => {
     const scroll = () => {
