@@ -103,7 +103,7 @@ class LemonadeProvider extends BaseModelProvider<LemonadeConfig> {
       configuration: {
         baseURL: this.config.baseURL,
       },
-    });
+    }) as unknown as BaseChatModel;
   }
 
   static parseAndValidate(raw: any): LemonadeConfig {

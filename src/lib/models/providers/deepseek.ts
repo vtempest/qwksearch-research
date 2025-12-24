@@ -71,7 +71,7 @@ class DeepSeekProvider extends BaseModelProvider<DeepSeekConfig> {
       configuration: {
         baseURL: 'https://api.deepseek.com',
       },
-    });
+    }) as unknown as BaseChatModel;
   }
 
   static parseAndValidate(raw: any): DeepSeekConfig {

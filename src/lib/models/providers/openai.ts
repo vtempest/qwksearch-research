@@ -200,7 +200,7 @@ class OpenAIProvider extends BaseModelProvider<OpenAIConfig> {
       configuration: {
         baseURL: this.config.baseURL,
       },
-    });
+    }) as unknown as BaseChatModel;
   }
 
   static parseAndValidate(raw: any): OpenAIConfig {

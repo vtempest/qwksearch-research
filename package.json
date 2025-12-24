@@ -1,6 +1,6 @@
 {
   "name": "qwksearch",
-  "description": "QwkSearch - Privacy-focused AI answering engine with web search",
+  "description": "Search, extract, vectorize, outline graph, and monitor the web for a topic with AI Research Agent.",
   "version": "2.0.0",
   "license": "MIT",
   "scripts": {

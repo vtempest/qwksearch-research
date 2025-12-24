@@ -94,7 +94,7 @@ class LMStudioProvider extends BaseModelProvider<LMStudioConfig> {
       configuration: {
         baseURL: this.normalizeBaseURL(this.config.baseURL),
       },
-    });
+    }) as unknown as BaseChatModel;
   }
 
   static parseAndValidate(raw: any): LMStudioConfig {

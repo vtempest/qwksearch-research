@@ -524,7 +524,7 @@ const ArticleExtractPanel: React.FC<ArticleExtractPanelProps> = ({
                                 {/* Citation Information */}
                                 {extractedArticle.cite && (
                                   <div
-                                    className="mb-3 text-sm text-gray-600 dark:text-gray-400 italic"
+                                    className="mb-3 text-sm text-gray-600 dark:text-gray-400"
                                     dangerouslySetInnerHTML={{ __html: extractedArticle.cite }}
                                   />
                                 )}
