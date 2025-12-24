@@ -169,7 +169,7 @@ const MessageBox = ({
                   section.assistantMessage &&
                   !loading && (
                     <div className="mt-8 pt-6 border-t border-border/50">
-                      <div className="flex flex-row items-center space-x-2 mb-4">
+                      {/* <div className="flex flex-row items-center space-x-2 mb-4">
                         <Layers3
                           className="text-foreground"
                           size={20}
@@ -177,7 +177,7 @@ const MessageBox = ({
                         <h3 className="text-foreground font-medium text-xl">
                           Follow-up Questions
                         </h3>
-                      </div>
+                      </div> */}
                       <div className="space-y-0">
                         {section.suggestions.map(
                           (suggestion: string, i: number) => (
