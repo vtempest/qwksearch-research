@@ -73,8 +73,7 @@ const Chat = () => {
   // Calculate input box positioning to account for extract panel
   const inputBoxStyle = isDesktop && isPanelOpen
     ? {
-        width: dividerWidth,
-        maxWidth: `calc(100vw - ${panelWidth}px - 4rem)`
+        width: `calc(100vw - ${panelWidth}px - 4rem)`,
       }
     : { width: dividerWidth };
 
