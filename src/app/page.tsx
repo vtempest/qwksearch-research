@@ -1,6 +1,5 @@
-import ChatWindow from '@/components/ChatWindow';
+import { Hero } from '@/components/ui/hero';
 import { Metadata } from 'next';
-import { getBackgroundArtwork } from '@/lib/home/home-extras';
 
 export const metadata: Metadata = {
   title: 'Chat - QwkSearch',
@@ -8,8 +7,7 @@ export const metadata: Metadata = {
 };
 
 const Home = () => {
-  const background = getBackgroundArtwork();
-  return <ChatWindow background={background} />;
+  return <Hero />;
 };
 
 export default Home;
