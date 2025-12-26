@@ -1,10 +1,8 @@
 
 import { NextRequest, NextResponse } from 'next/server';
-import { searchWeb } from '@/lib/searxng'; // Import from local library
+import { searchWeb } from '@/lib/search/search-web'; // Import from search-web.js
 
-export const runtime = 'edge'; // Optional: Use edge runtime if compatible with dependencies, otherwise remove. 
-// chrono-node might not be fully edge compatible if it uses big standard library features, but often it is. 
-// safe to revert to nodejs if needed.
+export const runtime = 'nodejs'; // Using nodejs runtime for compatibility with search-web.js dependencies
 
 export async function GET(req: NextRequest) {
   const url = new URL(req.url);
