@@ -7,7 +7,6 @@ import { Card } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
-import { Select } from "@/components/ui/select"
 import { Checkbox } from "@/components/ui/checkbox"
 import { useToast } from "@/components/ui/use-toast"
 import {
@@ -410,37 +409,35 @@ function ContactFormSection() {
             <div className="grid md:grid-cols-2 gap-6">
               <div className="space-y-2">
                 <Label htmlFor="business-type">Business Type *</Label>
-                <Select
+                <select
                   name="business-type"
                   required
-                  className="bg-gray-950 border-gray-800 text-white"
-                  options={[
-                    { value: "", label: "Select business type", disabled: true },
-                    { value: "startup", label: "Startup" },
-                    { value: "agency", label: "Agency" },
-                    { value: "saas", label: "SaaS Company" },
-                    { value: "enterprise", label: "Enterprise" },
-                    { value: "ecommerce", label: "E-commerce" },
-                    { value: "other", label: "Other" }
-                  ]}
-                />
+                  className="bg-gray-950 border-gray-800 text-white w-full rounded-md border px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                >
+                  <option value="" disabled>Select business type</option>
+                  <option value="startup">Startup</option>
+                  <option value="agency">Agency</option>
+                  <option value="saas">SaaS Company</option>
+                  <option value="enterprise">Enterprise</option>
+                  <option value="ecommerce">E-commerce</option>
+                  <option value="other">Other</option>
+                </select>
               </div>
 
               <div className="space-y-2">
                 <Label htmlFor="team-size">Team Size *</Label>
-                <Select
+                <select
                   name="team-size"
                   required
-                  className="bg-gray-950 border-gray-800 text-white"
-                  options={[
-                    { value: "", label: "Select team size", disabled: true },
-                    { value: "1-10", label: "1-10 employees" },
-                    { value: "11-50", label: "11-50 employees" },
-                    { value: "51-200", label: "51-200 employees" },
-                    { value: "201-1000", label: "201-1000 employees" },
-                    { value: "1000+", label: "1000+ employees" }
-                  ]}
-                />
+                  className="bg-gray-950 border-gray-800 text-white w-full rounded-md border px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                >
+                  <option value="" disabled>Select team size</option>
+                  <option value="1-10">1-10 employees</option>
+                  <option value="11-50">11-50 employees</option>
+                  <option value="51-200">51-200 employees</option>
+                  <option value="201-1000">201-1000 employees</option>
+                  <option value="1000+">1000+ employees</option>
+                </select>
               </div>
             </div>
 

@@ -13,7 +13,7 @@ import {
   StringUIConfigField,
   UIConfigField,
 } from '@/lib/config/types';
-import { Select } from '@/components/ui/select';
+import { SimpleSelect as Select } from '@/components/ui/simple-select';
 import { toast } from 'sonner';
 
 const AddProvider = ({

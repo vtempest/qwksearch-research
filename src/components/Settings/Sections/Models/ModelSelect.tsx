@@ -1,4 +1,4 @@
-import { Select } from '@/components/ui/select';
+import { SimpleSelect as Select } from '@/components/ui/simple-select';
 import { ConfigModelProvider } from '@/lib/config/types';
 import { useChat } from '@/lib/hooks/useChat';
 import { useState } from 'react';
