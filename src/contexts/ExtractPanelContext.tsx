@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useCallback, ReactNode } from 'react';
 
 interface ExtractPanelContextType {
   isOpen: boolean;
@@ -37,7 +37,7 @@ export const ExtractPanelProvider: React.FC<{ children: ReactNode }> = ({
   const [searchText, setSearchText] = useState('');
   const [panelWidth, setPanelWidth] = useState(600);
 
-  const openPanel = (url: string, searchText: string = '') => {
+  const openPanel = useCallback((url: string, searchText: string = '') => {
     setUrl(url);
     setSearchText(searchText);
     setIsOpen(true);
@@ -49,9 +49,9 @@ export const ExtractPanelProvider: React.FC<{ children: ReactNode }> = ({
       const newUrl = `${window.location.pathname}?${params.toString()}`;
       window.history.pushState({}, '', newUrl);
     }
-  };
+  }, []);
 
-  const closePanel = () => {
+  const closePanel = useCallback(() => {
     setIsOpen(false);
 
     // Remove extract parameter from URL
@@ -63,7 +63,7 @@ export const ExtractPanelProvider: React.FC<{ children: ReactNode }> = ({
         : window.location.pathname;
       window.history.pushState({}, '', newUrl);
     }
-  };
+  }, []);
 
   return (
     <ExtractPanelContext.Provider
