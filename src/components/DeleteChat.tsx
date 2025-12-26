@@ -69,9 +69,9 @@ const DeleteChat = ({
         onClick={() => {
           setConfirmationDialogOpen(true);
         }}
-        className="bg-transparent text-red-400 hover:scale-105 transition duration-200"
+        className="p-2 rounded-lg bg-transparent text-red-400 hover:bg-red-400/10 transition-colors duration-200"
       >
-        <Trash size={17} />
+        <Trash size={16} />
       </button>
       <Transition appear show={confirmationDialogOpen} as={Fragment}>
         <Dialog
