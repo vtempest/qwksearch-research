@@ -1,49 +1,12 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { Settings } from 'lucide-react';
+import { useEffect } from 'react';
 import EmptyChatMessageInput from './EmptyChatMessageInput';
-import { File } from './ChatWindow';
-import Link from 'next/link';
-import WeatherWidget from './WeatherWidget';
-import NewsArticleWidget from './NewsArticleWidget';
 import Footer, { defaultFooterLinks } from './Footer';
 import SettingsButtonMobile from '@/components/Settings/SettingsButtonMobile';
-import {
-  getShowNewsWidget,
-  getShowWeatherWidget,
-} from '@/lib/config/clientRegistry';
-import MessageBoxLoading from './MessageBoxLoading';
 import { renderCanvas } from '@/components/ui/canvas';
 
 const EmptyChat = ({ background }: { background?: string }) => {
-  const [showWeather, setShowWeather] = useState(() =>
-    typeof window !== 'undefined' ? getShowWeatherWidget() : true,
-  );
-  const [showNews, setShowNews] = useState(() =>
-    typeof window !== 'undefined' ? getShowNewsWidget() : true,
-  );
-
-  useEffect(() => {
-    const updateWidgetVisibility = () => {
-      setShowWeather(getShowWeatherWidget());
-      setShowNews(getShowNewsWidget());
-    };
-
-    updateWidgetVisibility();
-
-    window.addEventListener('client-config-changed', updateWidgetVisibility);
-    window.addEventListener('storage', updateWidgetVisibility);
-
-    return () => {
-      window.removeEventListener(
-        'client-config-changed',
-        updateWidgetVisibility,
-      );
-      window.removeEventListener('storage', updateWidgetVisibility);
-    };
-  }, []);
-
   useEffect(() => {
     let mounted = true;
 
@@ -86,34 +49,19 @@ const EmptyChat = ({ background }: { background?: string }) => {
           <SettingsButtonMobile />
         </div>
         <div className="flex flex-col items-center justify-center min-h-screen max-w-screen-sm mx-auto p-2 space-y-4">
-          <div className="flex flex-col items-center justify-center w-full space-y-8">
-            <MessageBoxLoading />
-            {/* <video
-              autoPlay
-              loop
-              muted
-              playsInline
-              className="w-full max-w-sm -mt-8"
-            >
-              <source src="/icons/qwksearch-video.webm" type="video/webm" />
-              Your browser does not support the video tag.
-            </video> */}
+          <div className="flex flex-col items-center justify-center w-full space-y-6">
+            <div className="flex flex-col items-center space-y-4">
+              <img
+                src="/icons/qwksearch-logo.png"
+                alt="QwkSearch"
+                className="w-32 h-32 object-contain"
+              />
+              <h1 className="text-3xl font-bold text-foreground">
+                QwkSearch
+              </h1>
+            </div>
             <EmptyChatMessageInput />
           </div>
-          {/* {(showWeather || showNews) && (
-            <div className="flex flex-col w-full gap-4 mt-2 sm:flex-row sm:justify-center">
-              {showWeather && (
-                <div className="flex-1 w-full">
-                  <WeatherWidget />
-                </div>
-              )}
-              {showNews && (
-                <div className="flex-1 w-full">
-                  <NewsArticleWidget />
-                </div>
-              )}
-            </div>
-          )} */}
         </div>
       </div>
       <Footer listFooterLinks={defaultFooterLinks} />
