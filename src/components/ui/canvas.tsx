@@ -202,7 +202,15 @@ function Node() {
   this.vx = 0;
 }
 
+let isInitialized = false;
+
 export const renderCanvas = function () {
+  // Prevent multiple initializations
+  if (isInitialized) {
+    return;
+  }
+  isInitialized = true;
+
   // @ts-ignore
   ctx = document.getElementById("canvas").getContext("2d");
   ctx.running = true;
@@ -227,7 +235,7 @@ export const renderCanvas = function () {
   });
   window.addEventListener("blur", () => {
     // @ts-ignore
-    ctx.running = true;
+    ctx.running = false;
   });
   resizeCanvas();
 };

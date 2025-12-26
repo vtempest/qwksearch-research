@@ -10,7 +10,26 @@ import { Button } from "@/components/ui/button";
 
 export function Hero() {
   useEffect(() => {
-    renderCanvas();
+    let mounted = true;
+
+    // Only initialize canvas if mounted
+    if (mounted) {
+      renderCanvas();
+    }
+
+    // Cleanup function
+    return () => {
+      mounted = false;
+      // Stop the canvas animation
+      const canvas = document.getElementById("canvas");
+      if (canvas) {
+        const ctx = (canvas as HTMLCanvasElement).getContext("2d");
+        if (ctx) {
+          // @ts-ignore
+          ctx.running = false;
+        }
+      }
+    };
   }, []);
 
   return (
