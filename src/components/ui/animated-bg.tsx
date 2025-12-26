@@ -1,8 +1,8 @@
 "use client";
 
-import { motion, useMotionValue, useTransform } from "framer-motion";
+import { motion } from "framer-motion";
 import type { TargetAndTransition } from "framer-motion";
-import { useEffect, useState, useId, useMemo } from "react";
+import { useState, useEffect, useId, useMemo } from "react";
 
 type Tone = "light" | "medium" | "dark";
 
@@ -280,31 +280,12 @@ const Arc = ({ left, cfg }: { left?: boolean; cfg: ArcCfg }) => {
     [cfg.blur],
   );
 
-  // Use motion value for better performance (no re-renders)
-  const animationProgress = useMotionValue(0);
-
-  // Transform animation progress to blur value
-  const blurAmount = useTransform(
-    animationProgress,
-    [0, 0.33, 0.66, 1],
-    [blurValues[0], blurValues[1], blurValues[2], blurValues[0]],
-  );
-
-  const [currentBlur, setCurrentBlur] = useState(blurValues[0]);
-
-  useEffect(() => {
-    // Only update blur at most 30 times per second (throttled) for better performance
-    let lastUpdate = 0;
-    const unsubscribe = blurAmount.on("change", (latest) => {
-      const now = Date.now();
-      if (now - lastUpdate > 33) {
-        // ~30fps max
-        setCurrentBlur(latest);
-        lastUpdate = now;
-      }
-    });
-    return unsubscribe;
-  }, [blurAmount]);
+  // Use a simple average blur value to avoid re-render loops
+  // The CSS blur is static, which is better for performance anyway
+  const currentBlur = useMemo(() => {
+    // Use the minimum blur value for best performance
+    return Math.min(...blurValues);
+  }, [blurValues]);
 
   return (
     <motion.div
@@ -323,12 +304,6 @@ const Arc = ({ left, cfg }: { left?: boolean; cfg: ArcCfg }) => {
         repeat: Infinity,
         repeatType: "loop",
         times: [0, 0.33, 0.66, 1],
-      }}
-      onUpdate={(latest) => {
-        // Update animation progress for blur interpolation
-        const startTime = cfg.delay * 1000;
-        const elapsed = (Date.now() - startTime) % 4600;
-        animationProgress.set(elapsed / 4600);
       }}
     >
       {left ? (
