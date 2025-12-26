@@ -53,6 +53,8 @@ export default function AppDockMenu({
 
   // Update document title and call handler when active view changes
   useEffect(() => {
+    if (!activeView) return;
+
     const activeApp = listDockApps.find((app) => app.id === activeView);
     if (activeApp) {
       document.title = activeApp.title;
@@ -181,13 +183,30 @@ function DockItem({
     ? useSpring(widthSync, { stiffness: 400, damping: 25 })
     : widthSync;
 
+  // Safely render icon with error handling
+  const renderIcon = () => {
+    try {
+      if (!dockItem?.icon) return null;
+      const iconHtml = dockItem.icon({ size: 32 });
+      return <div dangerouslySetInnerHTML={{ __html: iconHtml }} />;
+    } catch (error) {
+      console.error('Error rendering dock icon:', error);
+      return null;
+    }
+  };
+
   return (
     <div
       role="button"
       tabIndex={index}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
-      onClick={onClick}
+      onClick={(e) => {
+        // Prevent redundant clicks on already active items
+        if (!isActive) {
+          onClick();
+        }
+      }}
     >
       <motion.div
         ref={(el) => {
@@ -220,18 +239,16 @@ function DockItem({
         <div className="absolute inset-0.5 rounded-full bg-gradient-to-br from-white/30 to-black/5 opacity-50 group-[:has(.active)]:from-white/50" />
 
         <div className="relative z-10 transition-colors duration-300 text-neutral-600 group-hover:text-neutral-800">
-          {dockItem?.icon && (
-            <div
-              className={cn(
-                "flex flex-col items-center transition-opacity duration-300",
-                isActive ? "opacity-100" : "opacity-60"
-              )}
-            >
-              <div className="h-8 w-10 flex items-center justify-center">
-                <div dangerouslySetInnerHTML={{ __html: dockItem.icon({ size: 32 }) }} />
-              </div>
+          <div
+            className={cn(
+              "flex flex-col items-center transition-opacity duration-300",
+              isActive ? "opacity-100" : "opacity-60"
+            )}
+          >
+            <div className="h-8 w-10 flex items-center justify-center">
+              {renderIcon()}
             </div>
-          )}
+          </div>
         </div>
       </motion.div>
     </div>

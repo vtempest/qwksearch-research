@@ -11,7 +11,7 @@ import {
 import Link from 'next/link';
 import Image from 'next/image';
 import { useSelectedLayoutSegments, useRouter } from 'next/navigation';
-import React, { useState, type ReactNode } from 'react';
+import React, { useState, useCallback, type ReactNode } from 'react';
 import Layout from './Layout';
 import {
   Description,
@@ -76,6 +76,11 @@ const Sidebar = ({ children }: { children: React.ReactNode }) => {
 
   // Find the currently active link's href for initial active state
   const activeHref = navLinks.find((link) => link.active)?.href || '/';
+
+  // Memoize the dock click handler to prevent re-renders
+  const handleDockClick = useCallback((id: string) => {
+    router.push(id);
+  }, [router]);
 
   return (
     <div>
@@ -151,7 +156,7 @@ const Sidebar = ({ children }: { children: React.ReactNode }) => {
       <div className="fixed bottom-0 w-full z-50 flex justify-center pb-4 lg:hidden">
         <AppDockMenu
           listDockApps={dockApps}
-          handleAppDockClick={(id) => router.push(id)}
+          handleAppDockClick={handleDockClick}
           shouldAutoClickOnHover={false}
           shouldAnimateZoom={true}
           gapBetweenItems={false}
