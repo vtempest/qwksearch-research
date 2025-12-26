@@ -10,7 +10,7 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useSelectedLayoutSegments } from 'next/navigation';
+import { useSelectedLayoutSegments, useRouter } from 'next/navigation';
 import React, { useState, type ReactNode } from 'react';
 import Layout from './Layout';
 import {
@@ -22,6 +22,7 @@ import {
 import SettingsButton from './Settings/SettingsButton';
 import UserMenu from './UserMenu';
 import { ThemeDropdown } from "@/components/theme-dropdown"
+import AppDockMenu from '@/components/AppDockMenu';
 
 
 const VerticalIconContainer = ({ children }: { children: ReactNode }) => {
@@ -30,6 +31,7 @@ const VerticalIconContainer = ({ children }: { children: ReactNode }) => {
 
 const Sidebar = ({ children }: { children: React.ReactNode }) => {
   const segments = useSelectedLayoutSegments();
+  const router = useRouter();
   const [isOpen, setIsOpen] = useState<boolean>(true);
 
   const navLinks = [
@@ -63,6 +65,23 @@ const Sidebar = ({ children }: { children: React.ReactNode }) => {
       label: 'Editor',
     },
   ];
+
+  // Convert navLinks to dock apps format
+  const dockApps = navLinks.map((link) => ({
+    id: link.href,
+    title: link.label,
+    icon: ({ size }: { size: number }) => (
+      <Image
+        src={link.customIcon}
+        alt={link.label}
+        width={size}
+        height={size}
+      />
+    ),
+  }));
+
+  // Find the currently active link's href for initial active state
+  const activeHref = navLinks.find((link) => link.active)?.href || '/';
 
   return (
     <div>
@@ -135,37 +154,15 @@ const Sidebar = ({ children }: { children: React.ReactNode }) => {
         </div>
       </div>
 
-      <div className="fixed bottom-0 w-full z-50 flex flex-row items-center gap-x-6 bg-light-secondary dark:bg-dark-secondary px-4 py-4 shadow-sm lg:hidden">
-        {navLinks.map((link, i) => (
-          <Link
-            href={link.href}
-            key={i}
-            className={cn(
-              'relative flex flex-col items-center space-y-1 text-center w-full',
-              link.active
-                ? 'text-black dark:text-white'
-                : 'text-black dark:text-white/70',
-            )}
-          >
-            {link.active && (
-              <div className="absolute top-0 -mt-4 h-1 w-full rounded-b-lg bg-black dark:bg-white" />
-            )}
-            {link.customIcon ? (
-              <Image
-                src={link.customIcon}
-                alt={link.label}
-                width={24}
-                height={24}
-              />
-            ) : (
-              <link.icon />
-            )}
-            <p className="text-xs">{link.label}</p>
-          </Link>
-        ))}
-        <div className="flex flex-col items-center space-y-1 text-center">
-          <UserMenu />
-        </div>
+      <div className="fixed bottom-0 w-full z-50 flex justify-center pb-4 lg:hidden">
+        <AppDockMenu
+          listDockApps={dockApps}
+          handleAppDockClick={(id) => router.push(id)}
+          initialActiveId={activeHref}
+          shouldAutoClickOnHover={false}
+          shouldAnimateZoom={true}
+          gapBetweenItems={false}
+        />
       </div>
 
       <Layout>{children}</Layout>
