@@ -23,6 +23,7 @@ import SettingsButton from './Settings/SettingsButton';
 import UserMenu from './UserMenu';
 import { ThemeDropdown } from "@/components/theme-dropdown"
 import AppDockMenu from '@/components/AppDockMenu';
+import { Dock, DockIcon, DockItem, DockLabel } from '@/components/ui/dock';
 
 
 const VerticalIconContainer = ({ children }: { children: ReactNode }) => {
@@ -79,75 +80,80 @@ const Sidebar = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <div>
-      <div className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-[72px] lg:flex-col border-r border-light-200 dark:border-dark-200">
-        <div className="flex grow flex-col items-center justify-between gap-y-5 overflow-y-auto bg-light-secondary dark:bg-dark-secondary px-2 py-8 shadow-sm shadow-light-200/10 dark:shadow-black/25">
-          <a
-            className="p-2.5 rounded-full bg-light-200 text-black/70 dark:bg-dark-200 dark:text-white/70 hover:opacity-70 hover:scale-105 tansition duration-200"
-            href="/"
-          >
-            <Plus size={19} className="cursor-pointer" />
-          </a>
-          <VerticalIconContainer>
-            {navLinks.map((link, i) => (
-              <Link
-                key={i}
-                href={link.href}
-                className={cn(
-                  'relative flex flex-col items-center justify-center space-y-0.5 cursor-pointer w-full py-2 rounded-lg',
-                  link.active
-                    ? 'text-black/70 dark:text-white/70 '
-                    : 'text-black/60 dark:text-white/60',
-                )}
-              >
-                <div
-                  className={cn(
-                    link.active && 'bg-light-200 dark:bg-dark-200',
-                    'group rounded-lg hover:bg-light-200 hover:dark:bg-dark-200 transition duration-200',
-                  )}
-                >
+      {/* Desktop: Bottom dock menu */}
+      <div className="hidden lg:block lg:fixed lg:bottom-0 lg:left-0 lg:right-0 lg:z-50">
+        <Dock className='items-end pb-3'>
+          {/* New Chat Button */}
+          <DockItem className='aspect-square rounded-full bg-light-200 dark:bg-neutral-800'>
+            <DockLabel>New Chat</DockLabel>
+            <DockIcon>
+              <Link href="/" className="w-full h-full flex items-center justify-center">
+                <Plus className="h-full w-full text-neutral-600 dark:text-neutral-300" />
+              </Link>
+            </DockIcon>
+          </DockItem>
+
+          {/* Navigation Links */}
+          {navLinks.map((link, i) => (
+            <DockItem
+              key={i}
+              className={cn(
+                'aspect-square rounded-full',
+                link.active
+                  ? 'bg-light-primary dark:bg-dark-primary ring-2 ring-light-primary/50 dark:ring-dark-primary/50'
+                  : 'bg-light-200 dark:bg-neutral-800'
+              )}
+            >
+              <DockLabel>{link.label}</DockLabel>
+              <DockIcon>
+                <Link href={link.href} className="w-full h-full flex items-center justify-center">
                   {link.customIcon ? (
                     <Image
                       src={link.customIcon}
                       alt={link.label}
-                      width={25}
-                      height={25}
-                      className={cn(
-                        !link.active && 'group-hover:scale-105',
-                        'transition duration:200 m-1.5',
-                      )}
+                      width={32}
+                      height={32}
+                      className="h-full w-full object-contain"
                     />
                   ) : (
-                    <link.icon
-                      size={25}
-                      className={cn(
-                        !link.active && 'group-hover:scale-105',
-                        'transition duration:200 m-1.5',
-                      )}
-                    />
+                    <link.icon className="h-full w-full text-neutral-600 dark:text-neutral-300" />
                   )}
-                </div>
-                <p
-                  className={cn(
-                    link.active
-                      ? 'text-black/80 dark:text-white/80'
-                      : 'text-black/60 dark:text-white/60',
-                    'text-[10px]',
-                  )}
-                >
-                  {link.label}
-                </p>
-              </Link>
-            ))}
-          </VerticalIconContainer>
+                </Link>
+              </DockIcon>
+            </DockItem>
+          ))}
 
-          <div className="flex flex-col items-center gap-3">
-            <UserMenu />
-            <ThemeDropdown />
-            <SettingsButton />
-          </div>
-        </div>
+          {/* Settings, Theme, User Menu */}
+          <DockItem className='aspect-square rounded-full bg-light-200 dark:bg-neutral-800'>
+            <DockLabel>Settings</DockLabel>
+            <DockIcon>
+              <div className="w-full h-full flex items-center justify-center">
+                <SettingsButton />
+              </div>
+            </DockIcon>
+          </DockItem>
+
+          <DockItem className='aspect-square rounded-full bg-light-200 dark:bg-neutral-800'>
+            <DockLabel>Theme</DockLabel>
+            <DockIcon>
+              <div className="w-full h-full flex items-center justify-center">
+                <ThemeDropdown />
+              </div>
+            </DockIcon>
+          </DockItem>
+
+          <DockItem className='aspect-square rounded-full bg-light-200 dark:bg-neutral-800'>
+            <DockLabel>Account</DockLabel>
+            <DockIcon>
+              <div className="w-full h-full flex items-center justify-center">
+                <UserMenu />
+              </div>
+            </DockIcon>
+          </DockItem>
+        </Dock>
       </div>
 
+      {/* Mobile: Bottom dock menu */}
       <div className="fixed bottom-0 w-full z-50 flex justify-center pb-4 lg:hidden">
         <AppDockMenu
           listDockApps={dockApps}

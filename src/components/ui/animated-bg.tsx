@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import type { TargetAndTransition } from "framer-motion";
-import { useState, useId, useMemo } from "react";
+import { useState, useId, useMemo, useEffect } from "react";
 
 type Tone = "light" | "medium" | "dark";
 

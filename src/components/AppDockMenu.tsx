@@ -118,13 +118,12 @@ export default function AppDockMenu({
         role="toolbar"
         aria-orientation="horizontal"
         aria-label="Dock Menu"
-        style={{ userSelect: "none" }}
+        style={{ userSelect: "none", backgroundColor: bgColor, borderColor: bgColor }}
         tabIndex={0}
         className={cn(
           "h-16 items-end rounded-full border px-3 pb-2 flex shadow-inner shadow-neutral-300/5",
           gapBetweenItems ? "gap-5" : "gap-1"
         )}
-        style={{ backgroundColor: bgColor, borderColor: bgColor }}
         onMouseLeave={handleMouseLeave}
         onMouseMove={handleMouseMove}
       >
