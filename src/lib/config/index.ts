@@ -9,6 +9,7 @@ import {
 import { hashObj } from '../serverUtils';
 import { getModelProvidersUIConfigSection } from '../models/providers';
 import { getMCPServersUIConfigSection } from '../mcpservers';
+import { getDefaultWorkspaceConnectors } from './workspaceConnectors';
 
 class ConfigManager {
   configPath: string = path.join(
@@ -24,6 +25,7 @@ class ConfigManager {
     personalization: {},
     modelProviders: [],
     mcpServers: [],
+    workspaceConnectors: [],
     search: {
       searxngURL: '',
       tavilyApiKey: '',
@@ -111,6 +113,7 @@ class ConfigManager {
     ],
     modelProviders: [],
     mcpServers: [],
+    workspaceConnectors: [],
     search: [
       {
         name: 'SearXNG URL',
@@ -297,6 +300,16 @@ class ConfigManager {
     const mcpServerConfigSections = getMCPServersUIConfigSection();
 
     this.uiConfigSections.mcpServers = mcpServerConfigSections;
+
+    /* Workspace connectors section */
+    const defaultWorkspaceConnectors = getDefaultWorkspaceConnectors();
+
+    // Initialize workspace connectors if not already present
+    if (!this.currentConfig.workspaceConnectors || this.currentConfig.workspaceConnectors.length === 0) {
+      this.currentConfig.workspaceConnectors = defaultWorkspaceConnectors;
+    }
+
+    this.uiConfigSections.workspaceConnectors = this.currentConfig.workspaceConnectors;
 
     const newProviders: ConfigModelProvider[] = [];
 
@@ -587,6 +600,18 @@ class ConfigManager {
     this.saveConfig();
 
     return server;
+  }
+
+  public toggleWorkspaceConnector(id: string) {
+    const connector = this.currentConfig.workspaceConnectors.find((c) => c.id === id);
+
+    if (!connector) throw new Error('Workspace connector not found');
+
+    connector.enabled = !connector.enabled;
+
+    this.saveConfig();
+
+    return connector;
   }
 
   public isSetupComplete() {
