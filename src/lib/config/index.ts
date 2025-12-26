@@ -637,4 +637,15 @@ class ConfigManager {
 
 const configManager = new ConfigManager();
 
+/**
+ * Checks if the application is running in local mode
+ * @returns true if running locally, false otherwise
+ */
+export function isLocalMode(): boolean {
+  return (
+    process.env.NODE_ENV === 'development' ||
+    process.env.NEXT_PUBLIC_LOCAL_MODE === 'true'
+  );
+}
+
 export default configManager;

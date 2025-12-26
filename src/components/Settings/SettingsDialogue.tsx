@@ -19,7 +19,7 @@ import Models from './Sections/Models/Section';
 import MCPServers from './Sections/MCPServers/Section';
 import WorkspaceConnectors from './Sections/WorkspaceConnectors/Section';
 import SearchSection from './Sections/Search';
-import { Select } from '@/components/ui/select';
+import { SimpleSelect as Select } from '@/components/ui/simple-select';
 import Personalization from './Sections/Personalization';
 
 const sections = [
