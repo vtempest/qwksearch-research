@@ -4,7 +4,6 @@ import { cn } from '@/lib/utils';
 import {
   BookOpenText,
   Search,
-  SquarePen,
   Settings,
   Plus,
   ArrowLeft,
@@ -57,8 +56,8 @@ const Sidebar = ({ children }: { children: React.ReactNode }) => {
       label: 'History',
     },
     {
-      icon: SquarePen,
-      customIcon: null,
+      icon: null,
+      customIcon: '/icons/icon-read.svg',
       href: '/editor',
       active: segments.includes('editor'),
       label: 'Editor',
