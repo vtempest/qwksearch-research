@@ -56,6 +56,13 @@ const Sidebar = ({ children }: { children: React.ReactNode }) => {
       active: segments.includes('library'),
       label: 'History',
     },
+    {
+      icon: SquarePen,
+      customIcon: null,
+      href: '/editor',
+      active: segments.includes('editor'),
+      label: 'Editor',
+    },
   ];
 
   return (
