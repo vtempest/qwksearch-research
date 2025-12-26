@@ -70,14 +70,8 @@ const Sidebar = ({ children }: { children: React.ReactNode }) => {
   const dockApps = navLinks.map((link) => ({
     id: link.href,
     title: link.label,
-    icon: ({ size }: { size: number }) => (
-      <Image
-        src={link.customIcon}
-        alt={link.label}
-        width={size}
-        height={size}
-      />
-    ),
+    icon: ({ size }: { size: number }) =>
+      `<img src="${link.customIcon}" alt="${link.label}" width="${size}" height="${size}" />`,
   }));
 
   // Find the currently active link's href for initial active state
@@ -158,7 +152,6 @@ const Sidebar = ({ children }: { children: React.ReactNode }) => {
         <AppDockMenu
           listDockApps={dockApps}
           handleAppDockClick={(id) => router.push(id)}
-          initialActiveId={activeHref}
           shouldAutoClickOnHover={false}
           shouldAnimateZoom={true}
           gapBetweenItems={false}
