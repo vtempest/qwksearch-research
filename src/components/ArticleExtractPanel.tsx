@@ -8,6 +8,7 @@ import {
   MessageCircleQuestion,
   X,
   Star,
+  ExternalLink,
 } from 'lucide-react';
 import {
   Dialog,
@@ -17,6 +18,14 @@ import {
 } from '@headlessui/react';
 import { Fragment } from 'react';
 import { useExtractPanel } from '@/contexts/ExtractPanelContext';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 
 interface Article {
   html?: string;
@@ -338,6 +347,35 @@ const ArticleExtractPanel: React.FC<ArticleExtractPanelProps> = (props) => {
     }
   };
 
+  const handleOpenWithLLM = async (llmName: string) => {
+    if (!extractedArticle) return;
+
+    // Get the article text
+    const articleText = extractedArticle.html?.replace(/<[^>]*>?/g, '') || '';
+    const cite = extractedArticle.cite?.replace(/<[^>]*>?/g, '') || '';
+    const textToCopy = `${cite}\n\n${articleText}`;
+
+    // Copy to clipboard
+    try {
+      await navigator.clipboard.writeText(textToCopy);
+    } catch (error) {
+      console.error('Failed to copy to clipboard:', error);
+    }
+
+    // Open LLM website
+    const llmUrls: Record<string, string> = {
+      perplexity: 'https://www.perplexity.ai/',
+      claude: 'https://claude.ai/',
+      chatgpt: 'https://chatgpt.com/',
+      gemini: 'https://gemini.google.com/',
+    };
+
+    const url = llmUrls[llmName.toLowerCase()];
+    if (url) {
+      window.open(url, '_blank');
+    }
+  };
+
   const highlightCodeSyntax = (element: HTMLDivElement | null) => {
     if (!element) return;
     // This would integrate with highlight.js if needed
@@ -394,6 +432,30 @@ const ArticleExtractPanel: React.FC<ArticleExtractPanelProps> = (props) => {
                                 <Clipboard className="mr-2 h-4 w-4" />
                               </button>
 
+                              <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                  <button className="px-4 py-2 text-sm font-semibold flex items-center rounded-md bg-white text-blue-500 hover:bg-blue-100 transition-all duration-300 border border-blue-200 shadow-sm">
+                                    <ExternalLink className="mr-2 h-4 w-4" />
+                                    LLM
+                                  </button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="end" className="w-48">
+                                  <DropdownMenuLabel>Open with LLM</DropdownMenuLabel>
+                                  <DropdownMenuSeparator />
+                                  <DropdownMenuItem onClick={() => handleOpenWithLLM('perplexity')}>
+                                    Perplexity
+                                  </DropdownMenuItem>
+                                  <DropdownMenuItem onClick={() => handleOpenWithLLM('claude')}>
+                                    Claude
+                                  </DropdownMenuItem>
+                                  <DropdownMenuItem onClick={() => handleOpenWithLLM('chatgpt')}>
+                                    ChatGPT
+                                  </DropdownMenuItem>
+                                  <DropdownMenuItem onClick={() => handleOpenWithLLM('gemini')}>
+                                    Gemini
+                                  </DropdownMenuItem>
+                                </DropdownMenuContent>
+                              </DropdownMenu>
 
                               <button
                                 onClick={toggleFavorite}
