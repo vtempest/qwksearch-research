@@ -247,7 +247,7 @@ const Navbar = () => {
 
   return (
     <div
-      className="sticky -mx-4 lg:mx-0 top-0 z-40 bg-background/95 backdrop-blur-sm border-b border-border/50 transition-all duration-300"
+      className="sticky -mx-4 lg:mx-0 top-0 z-[60] bg-background/95 backdrop-blur-sm border-b border-border/50 transition-all duration-300"
       style={containerStyle}
     >
       <div className="px-4 lg:px-6 py-4">
