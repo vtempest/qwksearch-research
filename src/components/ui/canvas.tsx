@@ -184,7 +184,7 @@ var ctx,
   // @ts-ignore
   f,
   e = 0,
-  pos = {},
+  pos = { x: 0, y: 0 },
   // @ts-ignore
   lines = [],
   E = {
