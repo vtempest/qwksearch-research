@@ -6,8 +6,7 @@ import { CsvTable } from "@/components/ui/csv-table";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { useAuth } from "@/components/AuthProvider";
-import { fetchFileContent } from "@/hooks/files/use-file-queries";
+import { authClient } from "@/lib/auth-client";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -169,7 +168,6 @@ export function XlsxRenderer({
   sandboxId,
   project,
 }: XlsxRendererProps) {
-  const { session } = useAuth();
   const [sheetIndex, setSheetIndex] = useState(0);
   const [searchTerm, setSearchTerm] = useState("");
   const [hiddenColumns, setHiddenColumns] = useState<Set<string>>(new Set());
@@ -207,7 +205,14 @@ export function XlsxRenderer({
           const resp = await fetch(xlsxPath);
           if (!resp.ok) throw new Error(`Fetch failed: ${resp.status}`);
           arrayBuffer = await resp.arrayBuffer();
-        } else if (resolvedSandboxId && session?.token) {
+        } else if (resolvedSandboxId) {
+          // Get session from better-auth
+          const { data: sessionData } = await authClient.getSession();
+
+          if (!sessionData?.session?.token) {
+            throw new Error("Authentication required");
+          }
+
           // Handle paths that start with "workspace" (without leading /)
           let normalizedPath = xlsxPath;
           if (xlsxPath === "workspace" || xlsxPath.startsWith("workspace/")) {
@@ -223,7 +228,7 @@ export function XlsxRenderer({
 
           const response = await fetch(url.toString(), {
             headers: {
-              Authorization: `Bearer ${session.token}`,
+              Authorization: `Bearer ${sessionData.session.token}`,
             },
           });
 
@@ -284,7 +289,7 @@ export function XlsxRenderer({
     return () => {
       cancelled = true;
     };
-  }, [xlsxPath, resolvedSandboxId, session?.token, fileName]);
+  }, [xlsxPath, resolvedSandboxId, fileName]);
 
   const currentSheet = parsed.sheets[sheetIndex] || { headers: [], data: [] };
 

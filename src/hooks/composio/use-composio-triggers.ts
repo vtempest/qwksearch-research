@@ -3,14 +3,21 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { backendApi } from "@/lib/api-client";
 
-interface ComposioAppsWithTriggersResponse {
-  success: boolean;
+interface ComposioAppsWithTriggersData {
   items: Array<{
     slug: string;
     name: string;
     logo?: string;
   }>;
   total: number;
+}
+
+interface ComposioAppsWithTriggersResponse {
+  success: boolean;
+  data?: ComposioAppsWithTriggersData;
+  error?: {
+    message: string;
+  };
 }
 
 export interface ComposioTriggerType {
@@ -33,8 +40,7 @@ export interface ComposioTriggerType {
   };
 }
 
-interface ComposioAppTriggersResponse {
-  success: boolean;
+interface ComposioAppTriggersData {
   items: ComposioTriggerType[];
   toolkit: {
     slug: string;
@@ -44,10 +50,18 @@ interface ComposioAppTriggersResponse {
   total: number;
 }
 
+interface ComposioAppTriggersResponse {
+  success: boolean;
+  data?: ComposioAppTriggersData;
+  error?: {
+    message: string;
+  };
+}
+
 export const useComposioAppsWithTriggers = () => {
   return useQuery({
     queryKey: ["composio", "apps-with-triggers"],
-    queryFn: async (): Promise<ComposioAppsWithTriggersResponse> => {
+    queryFn: async (): Promise<ComposioAppsWithTriggersData> => {
       const res = await backendApi.get<ComposioAppsWithTriggersResponse>(
         "/composio/triggers/apps",
       );
@@ -65,7 +79,7 @@ export const useComposioAppTriggers = (
 ) => {
   return useQuery({
     queryKey: ["composio", "app-triggers", toolkitSlug],
-    queryFn: async (): Promise<ComposioAppTriggersResponse> => {
+    queryFn: async (): Promise<ComposioAppTriggersData> => {
       const res = await backendApi.get<ComposioAppTriggersResponse>(
         `/composio/triggers/apps/${toolkitSlug}`,
       );

@@ -3,11 +3,15 @@
  * Provides a simple wrapper around fetch for making API calls
  */
 
+interface ExtendedRequestInit extends RequestInit {
+  showErrors?: boolean;
+}
+
 interface ApiClient {
-  get: (url: string, config?: RequestInit) => Promise<any>;
-  post: (url: string, data?: any, config?: RequestInit) => Promise<any>;
-  put: (url: string, data?: any, config?: RequestInit) => Promise<any>;
-  delete: (url: string, config?: RequestInit) => Promise<any>;
+  get: <T = any>(url: string, config?: ExtendedRequestInit) => Promise<T>;
+  post: <T = any>(url: string, data?: any, config?: ExtendedRequestInit) => Promise<T>;
+  put: <T = any>(url: string, data?: any, config?: ExtendedRequestInit) => Promise<T>;
+  delete: <T = any>(url: string, config?: ExtendedRequestInit) => Promise<T>;
 }
 
 const baseURL = typeof window !== 'undefined' ? window.location.origin : '';
@@ -16,7 +20,7 @@ async function request(
   method: string,
   url: string,
   data?: any,
-  config?: RequestInit
+  config?: ExtendedRequestInit
 ): Promise<any> {
   const fullUrl = url.startsWith('http') ? url : `${baseURL}${url}`;
 
@@ -50,8 +54,8 @@ async function request(
 }
 
 export const backendApi: ApiClient = {
-  get: (url: string, config?: RequestInit) => request('GET', url, undefined, config),
-  post: (url: string, data?: any, config?: RequestInit) => request('POST', url, data, config),
-  put: (url: string, data?: any, config?: RequestInit) => request('PUT', url, data, config),
-  delete: (url: string, config?: RequestInit) => request('DELETE', url, undefined, config),
+  get: (url: string, config?: ExtendedRequestInit) => request('GET', url, undefined, config),
+  post: (url: string, data?: any, config?: ExtendedRequestInit) => request('POST', url, data, config),
+  put: (url: string, data?: any, config?: ExtendedRequestInit) => request('PUT', url, data, config),
+  delete: (url: string, config?: ExtendedRequestInit) => request('DELETE', url, undefined, config),
 };
