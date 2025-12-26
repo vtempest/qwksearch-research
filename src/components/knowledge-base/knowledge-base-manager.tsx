@@ -503,7 +503,6 @@ export function KnowledgeBaseManager({
       const response = await backendApi.put(
         `/knowledge-base/folders/${editingFolder}`,
         { name: trimmedName },
-        { showErrors: false },
       );
 
       if (response.error) {
@@ -1312,7 +1311,7 @@ export function KnowledgeBaseManager({
         <KBFilePreviewModal
           isOpen={filePreviewModal.isOpen}
           onClose={() => setFilePreviewModal({ isOpen: false, file: null })}
-          file={filePreviewModal.file}
+          file={filePreviewModal.file as any}
           onEditSummary={handleEditSummary}
         />
       )}

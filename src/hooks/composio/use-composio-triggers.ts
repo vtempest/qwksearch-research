@@ -48,7 +48,7 @@ export const useComposioAppsWithTriggers = () => {
   return useQuery({
     queryKey: ["composio", "apps-with-triggers"],
     queryFn: async (): Promise<ComposioAppsWithTriggersResponse> => {
-      const res = await backendApi.get<ComposioAppsWithTriggersResponse>(
+      const res = await backendApi.get(
         "/composio/triggers/apps",
       );
       if (!res.success)
@@ -66,7 +66,7 @@ export const useComposioAppTriggers = (
   return useQuery({
     queryKey: ["composio", "app-triggers", toolkitSlug],
     queryFn: async (): Promise<ComposioAppTriggersResponse> => {
-      const res = await backendApi.get<ComposioAppTriggersResponse>(
+      const res = await backendApi.get(
         `/composio/triggers/apps/${toolkitSlug}`,
       );
       if (!res.success)
