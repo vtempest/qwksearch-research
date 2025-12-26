@@ -12,6 +12,9 @@ export default function GoogleOneTap() {
   const hasInitialized = useRef(false);
 
   useEffect(() => {
+    // Only run this effect once on mount
+    if (hasInitialized.current) return;
+
     // Clear reload flag if it's been too long (prevents flag from persisting indefinitely)
     const reloadFlag = sessionStorage.getItem(RELOAD_FLAG_KEY);
     if (reloadFlag) {
@@ -21,8 +24,11 @@ export default function GoogleOneTap() {
       }
     }
 
-    // Only show One Tap if user is not authenticated and not loading
-    if (!isAuthenticated && !isLoading && !hasInitialized.current) {
+    // Wait for session to load before showing One Tap
+    if (isLoading) return;
+
+    // Only show One Tap if user is not authenticated
+    if (!isAuthenticated) {
       hasInitialized.current = true;
 
       // Initialize Google One Tap
