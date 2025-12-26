@@ -637,4 +637,23 @@ class ConfigManager {
 
 const configManager = new ConfigManager();
 
+/**
+ * Determines if the application is running in local mode
+ * @returns true if running locally, false otherwise
+ */
+export function isLocalMode(): boolean {
+  // Check if we're running in development mode
+  if (process.env.NODE_ENV === 'development') {
+    return true;
+  }
+
+  // Check for localhost URLs
+  if (typeof window !== 'undefined') {
+    return window.location.hostname === 'localhost' ||
+           window.location.hostname === '127.0.0.1';
+  }
+
+  return false;
+}
+
 export default configManager;
