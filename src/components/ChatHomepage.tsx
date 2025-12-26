@@ -14,6 +14,7 @@ import {
   getShowWeatherWidget,
 } from '@/lib/config/clientRegistry';
 import MessageBoxLoading from './MessageBoxLoading';
+import { renderCanvas } from '@/components/ui/canvas';
 
 const EmptyChat = ({ background }: { background?: string }) => {
   const [showWeather, setShowWeather] = useState(() =>
@@ -40,6 +41,29 @@ const EmptyChat = ({ background }: { background?: string }) => {
         updateWidgetVisibility,
       );
       window.removeEventListener('storage', updateWidgetVisibility);
+    };
+  }, []);
+
+  useEffect(() => {
+    let mounted = true;
+
+    // Only initialize canvas if mounted
+    if (mounted) {
+      renderCanvas();
+    }
+
+    // Cleanup function
+    return () => {
+      mounted = false;
+      // Stop the canvas animation
+      const canvas = document.getElementById("canvas");
+      if (canvas) {
+        const ctx = (canvas as HTMLCanvasElement).getContext("2d");
+        if (ctx) {
+          // @ts-ignore
+          ctx.running = false;
+        }
+      }
     };
   }, []);
 
@@ -93,6 +117,10 @@ const EmptyChat = ({ background }: { background?: string }) => {
         </div>
       </div>
       <Footer listFooterLinks={defaultFooterLinks} />
+      <canvas
+        className="bg-skin-base pointer-events-none absolute inset-0 mx-auto"
+        id="canvas"
+      ></canvas>
     </div>
   );
 };
