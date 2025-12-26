@@ -1,0 +1,22 @@
+name: Auto-merge Claude PRs
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+
+permissions:
+  pull-requests: write
+  contents: write
+
+jobs:
+  automerge:
+    runs-on: ubuntu-latest
+    # Replace 'claude-dev[bot]' with the actual login that opens the PRs
+    # if: github.actor == 'claude' 
+
+    steps:
+      - name: Enable auto-merge on this PR
+        uses: peter-evans/enable-pull-request-automerge@v3
+        with:
+          pull-request-number: ${{ github.event.pull_request.number }}
+          merge-method: squash
