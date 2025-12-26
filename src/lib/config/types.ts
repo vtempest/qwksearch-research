@@ -70,6 +70,17 @@ type MCPServerConfig = {
   hash: string;
 };
 
+type WorkspaceConnector = {
+  id: string;
+  name: string;
+  key: string;
+  icon: string;
+  description: string;
+  enabled: boolean;
+  beta?: boolean;
+  config?: { [key: string]: any };
+};
+
 type Config = {
   version: number;
   setupComplete: boolean;
@@ -81,6 +92,7 @@ type Config = {
   };
   modelProviders: ConfigModelProvider[];
   mcpServers: MCPServerConfig[];
+  workspaceConnectors: WorkspaceConnector[];
   search: {
     [key: string]: any;
   };
@@ -110,6 +122,7 @@ type UIConfigSections = {
   personalization: UIConfigField[];
   modelProviders: ModelProviderUISection[];
   mcpServers: MCPServerUISection[];
+  workspaceConnectors: WorkspaceConnector[];
   search: UIConfigField[];
 };
 
@@ -124,6 +137,7 @@ export type {
   MCPServerUISection,
   ConfigModelProvider,
   MCPServerConfig,
+  WorkspaceConnector,
   TextareaUIConfigField,
   SwitchUIConfigField,
 };

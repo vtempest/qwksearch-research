@@ -3,6 +3,7 @@ import {
   ArrowLeft,
   BrainCog,
   ChevronLeft,
+  Plug,
   Search,
   Server,
   Sliders,
@@ -16,6 +17,7 @@ import Loader from '../ui/Loader';
 import { cn } from '@/lib/utils';
 import Models from './Sections/Models/Section';
 import MCPServers from './Sections/MCPServers/Section';
+import WorkspaceConnectors from './Sections/WorkspaceConnectors/Section';
 import SearchSection from './Sections/Search';
 import { Select } from '@/components/ui/select';
 import Personalization from './Sections/Personalization';
@@ -52,6 +54,14 @@ const sections = [
     icon: Server,
     component: MCPServers,
     dataAdd: 'mcpServers',
+  },
+  {
+    key: 'workspaceconnectors',
+    name: 'Workspace Connectors',
+    description: 'Connect to apps via Composio integrations.',
+    icon: Plug,
+    component: WorkspaceConnectors,
+    dataAdd: 'workspaceConnectors',
   },
   {
     key: 'search',
