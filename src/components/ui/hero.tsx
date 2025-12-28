@@ -14,7 +14,10 @@ export function Hero() {
   }, []);
 
   return (
-    <section id="home">
+    <section id="home" className="relative">
+      {/* Background gradient */}
+      <div className="fixed inset-0 -z-10 bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-blue-900" />
+
       <div className="animation-delay-8 animate-fadeIn mt-20 flex  flex-col items-center justify-center px-4 text-center md:mt-20">
         <div className="z-10 mb-6 mt-10 sm:justify-center md:mb-4 md:mt-20">
           <div className="relative flex items-center whitespace-nowrap rounded-full border bg-popover px-3 py-1 text-xs leading-6  text-primary/60 ">
@@ -89,7 +92,7 @@ export function Hero() {
         </div>
       </div>
       <canvas
-        className="bg-skin-base pointer-events-none absolute inset-0 mx-auto"
+        className="pointer-events-none fixed inset-0 -z-5 mx-auto opacity-40"
         id="canvas"
       ></canvas>
     </section>

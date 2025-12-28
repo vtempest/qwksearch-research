@@ -351,9 +351,10 @@ const ArticleExtractPanel: React.FC<ArticleExtractPanelProps> = (props) => {
                     <div className="flex items-center justify-between bg-secondary px-4 py-3 border-b border-border">
                       <button
                         onClick={onClose}
-                        className="rounded-md p-1 hover:bg-accent transition-colors"
+                        className="rounded-md p-2 lg:p-1 hover:bg-accent transition-colors"
+                        aria-label="Close panel"
                       >
-                        <X className="h-5 w-5" />
+                        <X className="h-6 w-6 lg:h-5 lg:w-5" />
                       </button>
                     </div>
 
