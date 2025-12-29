@@ -14,6 +14,7 @@ import { useExtractPanel } from '@/contexts/ExtractPanelContext';
 
 const MessageSources = ({ sources }: { sources: Document[] }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [userClosedPanel, setUserClosedPanel] = useState(false);
   const { openPanel, closePanel, isOpen } = useExtractPanel();
 
   // Check for extract parameter in URL on mount
@@ -23,19 +24,30 @@ const MessageSources = ({ sources }: { sources: Document[] }) => {
       const extractUrl = params.get('extract');
       if (extractUrl) {
         openPanel(decodeURIComponent(extractUrl), '');
+        setUserClosedPanel(false);
       }
     }
   }, [openPanel]);
 
-  // Auto-open first source by default
+  // Reset userClosedPanel when sources change (new search)
   useEffect(() => {
-    if (sources && sources.length > 0 && !isOpen) {
+    setUserClosedPanel(false);
+  }, [sources]);
+
+  // Auto-open first source by default (only if user hasn't manually closed)
+  useEffect(() => {
+    if (sources && sources.length > 0 && !isOpen && !userClosedPanel) {
       const firstSource = sources[0];
       if (firstSource?.metadata?.url) {
         openPanel(firstSource.metadata.url, '');
       }
     }
-  }, [sources, isOpen, openPanel]);
+  }, [sources, isOpen, openPanel, userClosedPanel]);
+
+  const handleClosePanel = () => {
+    setUserClosedPanel(true);
+    closePanel();
+  };
 
   const closeModal = () => {
     setIsDialogOpen(false);
@@ -49,6 +61,7 @@ const MessageSources = ({ sources }: { sources: Document[] }) => {
 
   const handleSourceClick = (e: React.MouseEvent, url: string) => {
     e.preventDefault();
+    setUserClosedPanel(false);
     openPanel(url, '');
   };
 
@@ -188,7 +201,7 @@ const MessageSources = ({ sources }: { sources: Document[] }) => {
         </Dialog>
       </Transition>
 
-      <ArticleExtractPanel />
+      <ArticleExtractPanel onClose={handleClosePanel} />
     </>
   );
 };
