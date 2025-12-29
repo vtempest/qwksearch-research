@@ -1,4 +1,4 @@
-import { Message } from '@/components/ChatWindow';
+import { Message } from '@/components/chat/ChatWindow';
 import { File } from '@/lib/hooks/useChat';
 
 export interface GuestChat {

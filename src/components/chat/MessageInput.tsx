@@ -2,10 +2,10 @@ import { cn } from '@/lib/utils';
 import { ArrowUp } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import TextareaAutosize from 'react-textarea-autosize';
-import Attach from './MessageInputActions/Attach';
-import CopilotToggle from './MessageInputActions/Copilot';
+import Attach from '../MessageInputActions/Attach';
+import CopilotToggle from '../MessageInputActions/Copilot';
 import { File } from './ChatWindow';
-import AttachSmall from './MessageInputActions/AttachSmall';
+import AttachSmall from '../MessageInputActions/AttachSmall';
 import { useChat } from '@/lib/hooks/useChat';
 
 const MessageInput = () => {

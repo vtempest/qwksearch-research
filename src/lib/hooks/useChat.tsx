@@ -7,7 +7,7 @@ import {
   SourceMessage,
   SuggestionMessage,
   UserMessage,
-} from '@/components/ChatWindow';
+} from '@/components/chat/ChatWindow';
 import {
   createContext,
   useContext,

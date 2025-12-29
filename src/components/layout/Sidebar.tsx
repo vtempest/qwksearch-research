@@ -19,9 +19,9 @@ import {
   DialogPanel,
   DialogTitle,
 } from '@headlessui/react';
-import SettingsButton from './Settings/SettingsButton';
+import SettingsButton from '../Settings/SettingsButton';
 import UserMenu from './UserMenu';
-import { ThemeDropdown } from "@/components/theme-dropdown"
+import { ThemeDropdown } from "@/components/theme/theme-dropdown"
 
 
 const VerticalIconContainer = ({ children }: { children: ReactNode }) => {

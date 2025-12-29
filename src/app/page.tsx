@@ -1,4 +1,4 @@
-import ChatWindow from '@/components/ChatWindow';
+import ChatWindow from '@/components/chat/ChatWindow';
 import { Metadata } from 'next';
 import { getBackgroundArtwork } from '@/lib/home/home-extras';
 

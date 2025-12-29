@@ -1,8 +1,8 @@
 import { Clock, Edit, Share, Trash, FileText, FileDown } from 'lucide-react';
-import { Message } from './ChatWindow';
+import { Message } from '../chat/ChatWindow';
 import { useEffect, useState, Fragment } from 'react';
 import { formatTimeDifference } from '@/lib/utils';
-import DeleteChat from './DeleteChat';
+import DeleteChat from '../chat/DeleteChat';
 import {
   Popover,
   PopoverButton,

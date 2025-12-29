@@ -14,7 +14,7 @@ import {
   Trash,
 } from 'lucide-react';
 import { Fragment, useRef, useState } from 'react';
-import { File as FileType } from '../ChatWindow';
+import { File as FileType } from '../chat/ChatWindow';
 import { useChat } from '@/lib/hooks/useChat';
 
 const AttachSmall = () => {

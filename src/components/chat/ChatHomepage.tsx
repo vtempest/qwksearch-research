@@ -5,9 +5,9 @@ import { Settings } from 'lucide-react';
 import EmptyChatMessageInput from './EmptyChatMessageInput';
 import { File } from './ChatWindow';
 import Link from 'next/link';
-import WeatherWidget from './WeatherWidget';
-import NewsArticleWidget from './NewsArticleWidget';
-import Footer, { defaultFooterLinks } from './Footer';
+import WeatherWidget from '../web-search/WeatherWidget';
+import NewsArticleWidget from '../web-search/NewsArticleWidget';
+import Footer, { defaultFooterLinks } from '../layout/Footer';
 import SettingsButtonMobile from '@/components/Settings/SettingsButtonMobile';
 import {
   getShowNewsWidget,

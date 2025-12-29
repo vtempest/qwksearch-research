@@ -5,15 +5,15 @@ import './globals.css';
 import './themes.css';
 import { cookies } from "next/headers"
 import { cn } from '@/lib/utils';
-import Sidebar from '@/components/Sidebar';
+import Sidebar from '@/components/layout/Sidebar';
 import { Toaster } from 'sonner';
 // import ThemeProvider from '@/components/theme/Provider';
 import configManager from '@/lib/config';
 import SetupWizard from '@/components/Setup/SetupWizard';
 import { ChatProvider } from '@/lib/hooks/useChat';
-import GoogleOneTap from '@/components/GoogleOneTap';
+import GoogleOneTap from '@/components/auth/GoogleOneTap';
 import { SessionProvider } from '@/lib/hooks/useSession';
-import { ThemeProvider } from "@/components/theme-provider";
+import { ThemeProvider } from "@/components/theme/theme-provider";
 import { ExtractPanelProvider } from '@/contexts/ExtractPanelContext';
 
 export const metadata: Metadata = {
