@@ -1,5 +1,3 @@
-import path from 'node:path';
-import fs from 'fs';
 import {
   Config,
   ConfigModelProvider,
@@ -11,15 +9,10 @@ import { getModelProvidersUIConfigSection } from '../models/providers';
 import { getMCPServersUIConfigSection } from '../mcpservers';
 
 class ConfigManager {
-  configPath: string = path.join(
-    process.env.DATA_DIR || process.cwd(),
-    '/data/config.json',
-  );
   configVersion = 1;
-  isReadOnly = false; // Track if filesystem is read-only (e.g., Vercel)
   currentConfig: Config = {
     version: this.configVersion,
-    setupComplete: false,
+    setupComplete: process.env.SETUP_COMPLETE === 'true' || false,
     preferences: {},
     personalization: {},
     modelProviders: [],
@@ -143,148 +136,32 @@ class ConfigManager {
   }
 
   private initialize() {
-    this.initializeConfig();
     this.initializeFromEnv();
+    this.loadPreferencesFromEnv();
   }
 
-  private saveConfig() {
-    // Skip saving if filesystem is read-only (e.g., Vercel serverless)
-    if (this.isReadOnly) {
-      console.log(
-        'Config changes not persisted: running in read-only environment',
-      );
-      return;
+  private loadPreferencesFromEnv() {
+    // Load preferences from environment variables
+    if (process.env.THEME) {
+      this.currentConfig.preferences.theme = process.env.THEME;
+    }
+    if (process.env.MEASURE_UNIT) {
+      this.currentConfig.preferences.measureUnit = process.env.MEASURE_UNIT;
+    }
+    if (process.env.AUTO_MEDIA_SEARCH) {
+      this.currentConfig.preferences.autoMediaSearch = process.env.AUTO_MEDIA_SEARCH === 'true';
+    }
+    if (process.env.SHOW_WEATHER_WIDGET) {
+      this.currentConfig.preferences.showWeatherWidget = process.env.SHOW_WEATHER_WIDGET === 'true';
+    }
+    if (process.env.SHOW_NEWS_WIDGET) {
+      this.currentConfig.preferences.showNewsWidget = process.env.SHOW_NEWS_WIDGET === 'true';
     }
 
-    try {
-      const tempPath = `${this.configPath}.tmp`;
-      fs.writeFileSync(tempPath, JSON.stringify(this.currentConfig, null, 2));
-      fs.renameSync(tempPath, this.configPath);
-    } catch (err) {
-      console.error('Failed to save config:', err);
-      this.isReadOnly = true;
-      console.log(
-        'Marked filesystem as read-only. Config will remain in memory only.',
-      );
+    // Load personalization from environment variables
+    if (process.env.SYSTEM_INSTRUCTIONS) {
+      this.currentConfig.personalization.systemInstructions = process.env.SYSTEM_INSTRUCTIONS;
     }
-  }
-
-  private initializeConfig() {
-    try {
-      const exists = fs.existsSync(this.configPath);
-      if (!exists) {
-        // Try to create the directory if it doesn't exist
-        const dir = path.dirname(this.configPath);
-        if (!fs.existsSync(dir)) {
-          try {
-            fs.mkdirSync(dir, { recursive: true });
-          } catch (mkdirErr) {
-            console.log(
-              'Cannot create config directory (read-only filesystem). Using in-memory config.',
-            );
-            this.isReadOnly = true;
-            return;
-          }
-        }
-
-        try {
-          fs.writeFileSync(
-            this.configPath,
-            JSON.stringify(this.currentConfig, null, 2),
-          );
-        } catch (writeErr) {
-          console.log(
-            'Cannot write config file (read-only filesystem). Using in-memory config.',
-          );
-          this.isReadOnly = true;
-          return;
-        }
-      } else {
-        try {
-          this.currentConfig = JSON.parse(
-            fs.readFileSync(this.configPath, 'utf-8'),
-          );
-        } catch (err) {
-          if (err instanceof SyntaxError) {
-            console.error(
-              `Error parsing config file at ${this.configPath}:`,
-              err,
-            );
-            console.log(
-              'Loading default config and overwriting the existing file.',
-            );
-            try {
-              fs.writeFileSync(
-                this.configPath,
-                JSON.stringify(this.currentConfig, null, 2),
-              );
-            } catch (writeErr) {
-              console.log('Cannot write config file. Using in-memory config.');
-              this.isReadOnly = true;
-            }
-            return;
-          } else {
-            console.log('Unknown error reading config file:', err);
-          }
-        }
-
-        this.currentConfig = this.migrateConfig(this.currentConfig);
-      }
-    } catch (err) {
-      console.error(
-        'Error initializing config (likely read-only filesystem):',
-        err,
-      );
-      console.log('Using in-memory config with defaults.');
-      this.isReadOnly = true;
-    }
-  }
-
-  private migrateConfig(config: Config): Config {
-    /* Migration: Remove invalid chat models (whisper, tts, dall-e, text-embedding) */
-    const invalidChatModelPatterns = [
-      'whisper',
-      'tts',
-      'dall-e',
-      'text-embedding',
-    ];
-
-    let modelsRemoved = false;
-
-    config.modelProviders = config.modelProviders.map((provider) => {
-      const originalChatModelsCount = provider.chatModels.length;
-
-      provider.chatModels = provider.chatModels.filter((model) => {
-        const isInvalid = invalidChatModelPatterns.some((pattern) =>
-          model.key.toLowerCase().includes(pattern),
-        );
-
-        if (isInvalid) {
-          console.log(
-            `[Config Migration] Removing invalid chat model "${model.key}" from provider "${provider.name}". This model cannot be used for chat completions.`,
-          );
-          modelsRemoved = true;
-        }
-
-        return !isInvalid;
-      });
-
-      if (provider.chatModels.length !== originalChatModelsCount) {
-        console.log(
-          `[Config Migration] Removed ${originalChatModelsCount - provider.chatModels.length} invalid chat model(s) from provider "${provider.name}".`,
-        );
-      }
-
-      return provider;
-    });
-
-    if (modelsRemoved) {
-      console.log(
-        '[Config Migration] Invalid chat models have been removed. Please select valid chat models in the settings.',
-      );
-    }
-
-    return config;
   }
 
   private initializeFromEnv() {
@@ -409,9 +286,7 @@ class ConfigManager {
       }
     });
 
-    if (newProviders.length > 0 || newMCPServers.length > 0 || searchChanged) {
-      this.saveConfig();
-    }
+    // Configuration is now stored in memory only, sourced from environment variables
   }
 
   public getConfig(key: string, defaultValue?: any): any {
@@ -445,7 +320,7 @@ class ConfigManager {
     const finalKey = parts[parts.length - 1];
     target[finalKey] = val;
 
-    this.saveConfig();
+    // Configuration changes are kept in memory only
   }
 
   public addModelProvider(type: string, name: string, config: any) {
@@ -461,7 +336,6 @@ class ConfigManager {
     };
 
     this.currentConfig.modelProviders.push(newModelProvider);
-    this.saveConfig();
 
     return newModelProvider;
   }
@@ -475,8 +349,6 @@ class ConfigManager {
 
     this.currentConfig.modelProviders =
       this.currentConfig.modelProviders.filter((p) => p.id !== id);
-
-    this.saveConfig();
   }
 
   public async updateModelProvider(id: string, name: string, config: any) {
@@ -488,8 +360,6 @@ class ConfigManager {
 
     provider.name = name;
     provider.config = config;
-
-    this.saveConfig();
 
     return provider;
   }
@@ -509,8 +379,6 @@ class ConfigManager {
 
     provider.chatModels.push(model);
 
-    this.saveConfig();
-
     return model;
   }
 
@@ -528,8 +396,6 @@ class ConfigManager {
     provider.chatModels = provider.chatModels.filter(
       (m) => m.key !== modelKey,
     );
-
-    this.saveConfig();
   }
 
   public addMCPServer(type: string, name: string, config: any) {
@@ -545,7 +411,6 @@ class ConfigManager {
     };
 
     this.currentConfig.mcpServers.push(newMCPServer);
-    this.saveConfig();
 
     return newMCPServer;
   }
@@ -558,8 +423,6 @@ class ConfigManager {
     this.currentConfig.mcpServers = this.currentConfig.mcpServers.filter(
       (s) => s.id !== id,
     );
-
-    this.saveConfig();
   }
 
   public async updateMCPServer(id: string, name: string, config: any) {
@@ -572,8 +435,6 @@ class ConfigManager {
     server.name = name;
     server.config = config;
 
-    this.saveConfig();
-
     return server;
   }
 
@@ -583,8 +444,6 @@ class ConfigManager {
     if (!server) throw new Error('MCP Server not found');
 
     server.enabled = enabled;
-
-    this.saveConfig();
 
     return server;
   }
@@ -597,8 +456,6 @@ class ConfigManager {
     if (!this.currentConfig.setupComplete) {
       this.currentConfig.setupComplete = true;
     }
-
-    this.saveConfig();
   }
 
   public getUIConfigSections(): UIConfigSections {
