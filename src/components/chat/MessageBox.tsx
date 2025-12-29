@@ -12,15 +12,15 @@ import {
   Plus,
 } from 'lucide-react';
 import Markdown, { MarkdownToJSX } from 'markdown-to-jsx';
-import Copy from './MessageActions/Copy';
-import Rewrite from './MessageActions/Rewrite';
-import MessageSources from './MessageSources';
-import SearchImages from './SearchImages';
-import SearchVideos from './SearchVideos';
+import Copy from '../MessageActions/Copy';
+import Rewrite from '../MessageActions/Rewrite';
+import MessageSources from '../web-search/MessageSources';
+import SearchImages from '../web-search/SearchImages';
+import SearchVideos from '../web-search/SearchVideos';
 import { useSpeech } from 'react-text-to-speech';
 import ThinkBox from './ThinkBox';
 import { useChat, Section } from '@/lib/hooks/useChat';
-import Citation from './Citation';
+import Citation from '../web-search/Citation';
 
 const ThinkTagProcessor = ({
   children,

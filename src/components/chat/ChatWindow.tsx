@@ -1,15 +1,15 @@
 'use client';
 
 import { Document } from '@langchain/core/documents';
-import Navbar from './Navbar';
+import Navbar from '../layout/Navbar';
 import Chat from './Chat';
 import ChatHomepage from './ChatHomepage';
 import { Settings } from 'lucide-react';
 import Link from 'next/link';
 import NextError from 'next/error';
 import { useChat } from '@/lib/hooks/useChat';
-import Loader from './ui/Loader';
-import SettingsButtonMobile from './Settings/SettingsButtonMobile';
+import Loader from '../ui/Loader';
+import SettingsButtonMobile from '../Settings/SettingsButtonMobile';
 
 export interface BaseMessage {
   chatId: string;

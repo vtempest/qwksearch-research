@@ -1,6 +1,6 @@
 'use client';
 
-import ChatWindow from '@/components/ChatWindow';
+import ChatWindow from '@/components/chat/ChatWindow';
 import React from 'react';
 
 const Page = () => {
