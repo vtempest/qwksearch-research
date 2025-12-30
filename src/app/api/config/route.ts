@@ -1,5 +1,5 @@
 import configManager from '@/lib/config';
-import ModelRegistry from '@/lib/models/registry';
+import ModelRegistry from '@/lib/research/models/registry';
 import { NextRequest, NextResponse } from 'next/server';
 import { ConfigModelProvider } from '@/lib/config/types';
 

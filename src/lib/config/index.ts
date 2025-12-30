@@ -5,7 +5,7 @@ import {
   UIConfigSections,
 } from './types';
 import { hashObj } from '../serverUtils';
-import { getModelProvidersUIConfigSection } from '../models/providers';
+import { getModelProvidersUIConfigSection } from '../research/models/providers';
 import { getMCPServersUIConfigSection } from '../mcpservers';
 
 class ConfigManager {

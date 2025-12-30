@@ -1,6 +1,6 @@
-import handleImageSearch from '@/lib/chains/imageSearchAgent';
-import ModelRegistry from '@/lib/models/registry';
-import { ModelWithProvider } from '@/lib/models/types';
+import handleImageSearch from '@/lib/research/chains/imageSearchAgent';
+import ModelRegistry from '@/lib/research/models/registry';
+import { ModelWithProvider } from '@/lib/research/models/types';
 import { AIMessage, BaseMessage, HumanMessage } from '@langchain/core/messages';
 
 interface ImageSearchBody {

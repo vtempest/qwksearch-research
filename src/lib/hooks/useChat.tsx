@@ -7,7 +7,7 @@ import {
   SourceMessage,
   SuggestionMessage,
   UserMessage,
-} from '@/components/chat/ChatWindow';
+} from '@/components/research/chat/ChatWindow';
 import {
   createContext,
   useContext,
@@ -20,7 +20,7 @@ import crypto from 'crypto';
 import { useParams, useSearchParams } from 'next/navigation';
 import { toast } from 'sonner';
 import { getSuggestions } from '../actions';
-import { MinimalProvider } from '../models/types';
+import { MinimalProvider } from '../research/models/types';
 import { getAutoMediaSearch } from '../config/clientRegistry';
 import { useSession } from './useSession';
 import {

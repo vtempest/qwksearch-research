@@ -1,4 +1,4 @@
-import ModelRegistry from '@/lib/models/registry';
+import ModelRegistry from '@/lib/research/models/registry';
 import { NextRequest } from 'next/server';
 
 export const GET = async (req: Request) => {

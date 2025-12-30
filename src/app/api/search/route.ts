@@ -1,6 +1,6 @@
 
 import { NextRequest, NextResponse } from 'next/server';
-import { searchWeb } from '@/lib/searxng'; // Import from local library
+import { searchWeb } from '@/lib/research/searxng'; // Import from local library
 
 export const runtime = 'edge'; // Optional: Use edge runtime if compatible with dependencies, otherwise remove. 
 // chrono-node might not be fully edge compatible if it uses big standard library features, but often it is. 

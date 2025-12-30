@@ -1,6 +1,6 @@
-import handleVideoSearch from '@/lib/chains/videoSearchAgent';
-import ModelRegistry from '@/lib/models/registry';
-import { ModelWithProvider } from '@/lib/models/types';
+import handleVideoSearch from '@/lib/research/chains/videoSearchAgent';
+import ModelRegistry from '@/lib/research/models/registry';
+import { ModelWithProvider } from '@/lib/research/models/types';
 import { AIMessage, BaseMessage, HumanMessage } from '@langchain/core/messages';
 
 interface VideoSearchBody {

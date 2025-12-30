@@ -1,6 +1,6 @@
-import generateSuggestions from '@/lib/chains/suggestionGeneratorAgent';
-import ModelRegistry from '@/lib/models/registry';
-import { ModelWithProvider } from '@/lib/models/types';
+import generateSuggestions from '@/lib/research/chains/suggestionGeneratorAgent';
+import ModelRegistry from '@/lib/research/models/registry';
+import { ModelWithProvider } from '@/lib/research/models/types';
 import { BaseChatModel } from '@langchain/core/language_models/chat_models';
 import { AIMessage, BaseMessage, HumanMessage } from '@langchain/core/messages';
 

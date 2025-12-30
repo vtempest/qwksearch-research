@@ -2,7 +2,8 @@
   "name": "qwksearch",
   "description": "Search, extract, vectorize, outline graph, and monitor the web for a topic with AI Research Agent.",
   "version": "2.0.0",
-  "license": "MIT",
+  "author": "vtempest",
+  "license": "rights.institute/prosper",
   "scripts": {
     "dev": "next dev",
     "build": "next build",

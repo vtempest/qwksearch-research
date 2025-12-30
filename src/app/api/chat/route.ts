@@ -6,10 +6,10 @@ import { db } from '@/lib/db';
 import { chats, messages as messagesSchema } from '@/lib/db/schema';
 import { and, eq, gt } from 'drizzle-orm';
 import { getFileDetails } from '@/lib/utils/files';
-import { searchHandlers } from '@/lib/search';
+import { searchHandlers } from '@/lib/research/search';
 import { z } from 'zod';
-import ModelRegistry from '@/lib/models/registry';
-import { ModelWithProvider } from '@/lib/models/types';
+import ModelRegistry from '@/lib/research/models/registry';
+import { ModelWithProvider } from '@/lib/research/models/types';
 import { getUserId } from '@/lib/auth/session';
 
 export const runtime = 'nodejs';

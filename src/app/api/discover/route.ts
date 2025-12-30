@@ -1,4 +1,4 @@
-import { searchSearxng } from '@/lib/searxng';
+import { searchSearxng } from '@/lib/research/searxng';
 
 const websitesForTopic = {
   tech: {

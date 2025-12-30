@@ -1,5 +1,5 @@
-import ModelRegistry from '@/lib/models/registry';
-import { Model } from '@/lib/models/types';
+import ModelRegistry from '@/lib/research/models/registry';
+import { Model } from '@/lib/research/models/types';
 import { NextRequest } from 'next/server';
 
 export const POST = async (

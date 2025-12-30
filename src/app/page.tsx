@@ -1,10 +1,10 @@
-import ChatWindow from '@/components/chat/ChatWindow';
+import ChatWindow from '@/components/research/chat/ChatWindow';
 import { Metadata } from 'next';
-import { getBackgroundArtwork } from '@/lib/home/home-extras';
+import { getBackgroundArtwork } from '@/lib/home/background-art';
 
 export const metadata: Metadata = {
   title: 'Chat - QwkSearch',
-  description: 'Chat with the internet, chat with QwkSearch.',
+  description: 'Search, extract, vectorize, outline graph, and monitor the web for a topic.',
 };
 
 const Home = () => {
