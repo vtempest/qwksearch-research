@@ -5,11 +5,10 @@ import { EventEmitter } from 'stream';
 import { db } from '@/lib/db';
 import { chats, messages as messagesSchema } from '@/lib/db/schema';
 import { and, eq, gt } from 'drizzle-orm';
-import { getFileDetails } from '@/lib/utils/files';
-import { searchHandlers } from '@/lib/search';
+import { searchHandlers } from '@/lib/research/search';
 import { z } from 'zod';
-import ModelRegistry from '@/lib/models/registry';
-import { ModelWithProvider } from '@/lib/models/types';
+import ModelRegistry from '@/lib/research/models/registry';
+import { ModelWithProvider } from '@/lib/research/models/types';
 import { getUserId } from '@/lib/auth/session';
 
 export const runtime = 'nodejs';
@@ -179,7 +178,6 @@ const handleHistorySave = async (
     where: and(eq(chats.id, message.chatId), eq(chats.userId, userId)),
   });
 
-  const fileData = files.map(getFileDetails);
 
   if (!chat) {
     console.log('[handleHistorySave] Creating new chat:', message.chatId);
@@ -191,19 +189,9 @@ const handleHistorySave = async (
         createdAt: new Date().toString(),
         focusMode: focusMode,
         userId: userId,
-        files: fileData,
       })
       .execute();
     console.log('[handleHistorySave] Chat created successfully:', message.chatId);
-  } else if (JSON.stringify(chat.files ?? []) != JSON.stringify(fileData)) {
-    console.log('[handleHistorySave] Updating chat files for:', message.chatId);
-    await db.update(chats)
-      .set({
-        files: files.map(getFileDetails),
-      })
-      .where(eq(chats.id, message.chatId))
-      .execute();
-    console.log('[handleHistorySave] Chat files updated:', message.chatId);
   }
 
   const messageExists = await db.query.messages.findFirst({

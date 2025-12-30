@@ -1,8 +1,10 @@
-import { clsx, type ClassValue } from "clsx"
-import { twMerge } from "tailwind-merge"
+import { clsx, type ClassValue } from 'clsx';
+import { twMerge } from 'tailwind-merge';
+import { BaseMessage, isAIMessage } from '@langchain/core/messages';
+import cosineSimilarity from 'compute-cosine-similarity';
 
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
+  return twMerge(clsx(inputs));
 }
 
 export const formatTimeDifference = (
@@ -26,4 +28,19 @@ export const formatTimeDifference = (
     return `${Math.floor(diffInSeconds / 86400)} day${Math.floor(diffInSeconds / 86400) !== 1 ? 's' : ''}`;
   else
     return `${Math.floor(diffInSeconds / 31536000)} year${Math.floor(diffInSeconds / 31536000) !== 1 ? 's' : ''}`;
+};
+
+// Chat history formatting (from utils/formatHistory.ts)
+export const formatChatHistoryAsString = (history: BaseMessage[]) => {
+  return history
+    .map(
+      (message) =>
+        `${isAIMessage(message) ? 'AI' : 'User'}: ${message.content}`,
+    )
+    .join('\n');
+};
+
+// Similarity computation (from utils/computeSimilarity.ts)
+export const computeSimilarity = (x: number[], y: number[]): number => {
+  return cosineSimilarity(x, y) as number;
 };

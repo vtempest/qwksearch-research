@@ -4,8 +4,8 @@ import { Globe2Icon } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
-import SmallNewsCard from '@/components/Discover/SmallNewsCard';
-import MajorNewsCard from '@/components/Discover/MajorNewsCard';
+import SmallNewsCard from '@/components/research/Discover/SmallNewsCard';
+import MajorNewsCard from '@/components/research/Discover/MajorNewsCard';
 
 export interface Discover {
   title: string;
