@@ -18,9 +18,7 @@ export function TiptapHighlightReader({ content }: Props) {
 
   const editor = useEditor({
     extensions: [
-      StarterKit.configure({
-        history: false, // optional, not needed if user can't edit
-      }),
+      StarterKit,
       Highlight.configure({
         multicolor: true,
       }),
