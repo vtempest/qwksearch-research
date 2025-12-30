@@ -2,6 +2,7 @@ import { ArrowRight } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import TextareaAutosize from 'react-textarea-autosize';
 import Focus from '../MessageInputActions/Focus';
+import Category from '../MessageInputActions/Category';
 import Optimization from '../MessageInputActions/Optimization';
 import Attach from '../MessageInputActions/Attach';
 import { useChat } from '@/lib/hooks/useChat';
@@ -70,6 +71,7 @@ const EmptyChatMessageInput = () => {
             <div className="flex flex-row items-center space-x-1">
               <ModelSelector />
               <Focus />
+              <Category />
               <Attach />
             </div>
             <button

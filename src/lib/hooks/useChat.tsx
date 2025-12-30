@@ -48,6 +48,7 @@ type ChatContext = {
   files: File[];
   fileIds: string[];
   focusMode: string;
+  category: string;
   chatId: string | undefined;
   optimizationMode: string;
   isMessagesLoaded: boolean;
@@ -59,6 +60,7 @@ type ChatContext = {
   chatModelProvider: ChatModelProvider;
   setOptimizationMode: (mode: string) => void;
   setFocusMode: (mode: string) => void;
+  setCategory: (category: string) => void;
   setFiles: (files: File[]) => void;
   setFileIds: (fileIds: string[]) => void;
   sendMessage: (
@@ -284,6 +286,7 @@ export const chatContext = createContext<ChatContext>({
   fileIds: [],
   files: [],
   focusMode: '',
+  category: '',
   hasError: false,
   isMessagesLoaded: false,
   isReady: false,
@@ -300,6 +303,7 @@ export const chatContext = createContext<ChatContext>({
   setFileIds: () => {},
   setFiles: () => {},
   setFocusMode: () => {},
+  setCategory: () => {},
   setOptimizationMode: () => {},
   setChatModelProvider: () => {},
 });
@@ -323,6 +327,7 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
   const [fileIds, setFileIds] = useState<string[]>([]);
 
   const [focusMode, setFocusMode] = useState('webSearch');
+  const [category, setCategory] = useState('general');
   const [optimizationMode, setOptimizationMode] = useState('speed');
 
   const [isMessagesLoaded, setIsMessagesLoaded] = useState(false);
@@ -805,6 +810,7 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
         files,
         fileIds,
         focusMode,
+        category,
         chatId,
         hasError,
         isMessagesLoaded,
@@ -816,6 +822,7 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
         setFileIds,
         setFiles,
         setFocusMode,
+        setCategory,
         setOptimizationMode,
         rewrite,
         sendMessage,

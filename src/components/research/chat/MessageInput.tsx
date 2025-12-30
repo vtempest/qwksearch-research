@@ -6,6 +6,8 @@ import Attach from '../MessageInputActions/Attach';
 import CopilotToggle from '../MessageInputActions/Copilot';
 import { File } from './ChatWindow';
 import AttachSmall from '../MessageInputActions/AttachSmall';
+import Category from '../MessageInputActions/Category';
+import Focus from '../MessageInputActions/Focus';
 import { useChat } from '@/lib/hooks/useChat';
 
 const MessageInput = () => {
@@ -80,7 +82,11 @@ const MessageInput = () => {
         placeholder="Ask a follow-up"
       />
       {mode === 'single' && (
-        <div className="flex flex-row items-center space-x-4">
+        <div className="flex flex-row items-center space-x-2">
+          <div className="flex flex-row items-center space-x-1">
+            <Focus />
+            <Category />
+          </div>
           {/* <CopilotToggle
             copilotEnabled={copilotEnabled}
             setCopilotEnabled={setCopilotEnabled}
@@ -96,7 +102,11 @@ const MessageInput = () => {
       {mode === 'multi' && (
         <div className="flex flex-row items-center justify-between w-full pt-2">
           <AttachSmall />
-          <div className="flex flex-row items-center space-x-4">
+          <div className="flex flex-row items-center space-x-2">
+            <div className="flex flex-row items-center space-x-1">
+              <Focus />
+              <Category />
+            </div>
             {/* <CopilotToggle
               copilotEnabled={copilotEnabled}
               setCopilotEnabled={setCopilotEnabled}
