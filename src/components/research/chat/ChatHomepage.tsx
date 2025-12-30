@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { Settings } from 'lucide-react';
 import EmptyChatMessageInput from './EmptyChatMessageInput';
+import HistoryDropdown from './HistoryDropdown';
 import { File } from './ChatWindow';
 import Link from 'next/link';
 import WeatherWidget from '../web-search/WeatherWidget';
@@ -75,6 +76,9 @@ const EmptyChat = ({ background }: { background?: string }) => {
               Your browser does not support the video tag.
             </video> */}
             <EmptyChatMessageInput />
+            <div className="flex justify-center">
+              <HistoryDropdown />
+            </div>
           </div>
           {/* {(showWeather || showNews) && (
             <div className="flex flex-col w-full gap-4 mt-2 sm:flex-row sm:justify-center">
