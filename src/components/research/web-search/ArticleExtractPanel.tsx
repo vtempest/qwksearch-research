@@ -17,6 +17,7 @@ import {
 } from '@headlessui/react';
 import { Fragment } from 'react';
 import { useExtractPanel } from '@/contexts/ExtractPanelContext';
+import { TiptapHighlightReader } from './TiptapHighlightReader';
 
 interface Article {
   html?: string;
@@ -515,12 +516,8 @@ const ArticleExtractPanel: React.FC<ArticleExtractPanelProps> = (props) => {
                                 </div>
 
                                 {/* Article HTML Content */}
-                                <div
-                                  id="article-content"
-                                  className="prose dark:prose-invert max-w-none text-md text-foreground leading-relaxed"
-                                  dangerouslySetInnerHTML={{
-                                    __html: extractedArticle.html || '',
-                                  }}
+                                <TiptapHighlightReader
+                                  content={extractedArticle.html || ''}
                                 />
                               </div>
                             )}
