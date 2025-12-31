@@ -75,9 +75,11 @@ const EmptyChat = ({ background }: { background?: string }) => {
               <source src="/icons/qwksearch-video.webm" type="video/webm" />
               Your browser does not support the video tag.
             </video> */}
-            <EmptyChatMessageInput />
-            <div className="flex justify-center">
-              <HistoryDropdown />
+            <div className="w-full space-y-2">
+              <EmptyChatMessageInput />
+              <div className="flex justify-center">
+                <HistoryDropdown position="bottom" align="center" />
+              </div>
             </div>
           </div>
           {/* {(showWeather || showNews) && (

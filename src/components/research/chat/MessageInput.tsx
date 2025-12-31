@@ -9,6 +9,7 @@ import AttachSmall from '../MessageInputActions/AttachSmall';
 import Category from '../MessageInputActions/Category';
 import Focus from '../MessageInputActions/Focus';
 import { useChat } from '@/lib/hooks/useChat';
+import HistoryDropdown from './HistoryDropdown';
 
 const MessageInput = () => {
   const { loading, sendMessage } = useChat();
@@ -70,7 +71,12 @@ const MessageInput = () => {
         mode === 'multi' ? 'flex-col rounded-2xl' : 'flex-row rounded-full',
       )}
     >
-      {mode === 'single' && <AttachSmall />}
+      {mode === 'single' && (
+        <>
+          <HistoryDropdown position="top" align="left" />
+          <AttachSmall />
+        </>
+      )}
       <TextareaAutosize
         ref={inputRef}
         value={message}
@@ -101,7 +107,10 @@ const MessageInput = () => {
       )}
       {mode === 'multi' && (
         <div className="flex flex-row items-center justify-between w-full pt-2">
-          <AttachSmall />
+          <div className="flex flex-row items-center gap-1">
+            <HistoryDropdown position="top" align="left" />
+            <AttachSmall />
+          </div>
           <div className="flex flex-row items-center space-x-2">
             <div className="flex flex-row items-center space-x-1">
               <Focus />
