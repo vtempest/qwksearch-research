@@ -78,7 +78,7 @@ const EmptyChat = ({ background }: { background?: string }) => {
             <div className="w-full space-y-2">
               <EmptyChatMessageInput />
               <div className="flex justify-center">
-                <HistoryDropdown position="bottom" align="center" />
+                <HistoryDropdown position="top" align="center" />
               </div>
             </div>
           </div>
