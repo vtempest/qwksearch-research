@@ -3,6 +3,7 @@ import { Message } from '../research/chat/ChatWindow';
 import { useEffect, useState, Fragment } from 'react';
 import { formatTimeDifference } from '@/lib/utils';
 import DeleteChat from '../research/chat/DeleteChat';
+import HistoryDropdown from '../research/chat/HistoryDropdown';
 import {
   Popover,
   PopoverButton,
@@ -272,6 +273,7 @@ const Navbar = () => {
           </div>
 
           <div className="flex items-center gap-1 min-w-0">
+            <HistoryDropdown position="bottom" align="right" />
             <Popover className="relative">
               <PopoverButton className="p-2 rounded-lg hover:bg-secondary transition-colors duration-200">
                 <Share size={16} className="text-muted-foreground" />
