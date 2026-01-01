@@ -50,13 +50,6 @@ const Sidebar = ({ children }: { children: React.ReactNode }) => {
     },
     {
       icon: null,
-      customIcon: '/icons/icon-history.svg',
-      href: '/library',
-      active: segments.includes('library'),
-      label: 'History',
-    },
-    {
-      icon: null,
       customIcon: '/icons/icon-read.svg',
       href: '/editor',
       active: segments.includes('editor'),
