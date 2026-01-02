@@ -7,7 +7,6 @@ import CopilotToggle from '../MessageInputActions/Copilot';
 import { File } from './ChatWindow';
 import AttachSmall from '../MessageInputActions/AttachSmall';
 import Category from '../MessageInputActions/Category';
-import Focus from '../MessageInputActions/Focus';
 import { useChat } from '@/lib/hooks/useChat';
 
 const MessageInput = () => {
@@ -86,7 +85,6 @@ const MessageInput = () => {
       {mode === 'single' && (
         <div className="flex flex-row items-center space-x-2">
           <div className="flex flex-row items-center space-x-1">
-            <Focus />
             <Category />
           </div>
           {/* <CopilotToggle
@@ -108,7 +106,6 @@ const MessageInput = () => {
           </div>
           <div className="flex flex-row items-center space-x-2">
             <div className="flex flex-row items-center space-x-1">
-              <Focus />
               <Category />
             </div>
             {/* <CopilotToggle
