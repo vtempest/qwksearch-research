@@ -13,12 +13,6 @@ import Image from 'next/image';
 import { useSelectedLayoutSegments } from 'next/navigation';
 import React, { useState, type ReactNode } from 'react';
 import Layout from './Layout';
-import {
-  Description,
-  Dialog,
-  DialogPanel,
-  DialogTitle,
-} from '@headlessui/react';
 import SettingsButton from '../Settings/SettingsButton';
 import UserMenu from './UserMenu';
 import { ThemeDropdown } from "@/components/theme/theme-dropdown"

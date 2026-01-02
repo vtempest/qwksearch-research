@@ -1,12 +1,11 @@
-import {
-  Description,
-  Dialog,
-  DialogPanel,
-  DialogTitle,
-} from '@headlessui/react';
 import { Loader2, Plus } from 'lucide-react';
 import { useMemo, useState } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import {
   MCPServerConfig,
   MCPServerUISection,
@@ -101,22 +100,8 @@ const AddMCPServer = ({
         <Plus className="w-3.5 h-3.5 md:w-4 md:h-4" />
         <span>Add Server</span>
       </button>
-      <AnimatePresence>
-        {open && (
-          <Dialog
-            static
-            open={open}
-            onClose={() => setOpen(false)}
-            className="relative z-[60]"
-          >
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.1 }}
-              className="fixed inset-0 flex w-screen items-center justify-center p-4 bg-black/30 backdrop-blur-sm"
-            >
-              <DialogPanel className="w-full mx-4 lg:w-[600px] max-h-[85vh] flex flex-col border bg-light-primary dark:bg-dark-primary border-light-secondary dark:border-dark-secondary rounded-lg">
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent className="w-full max-w-[600px] max-h-[85vh] flex flex-col border bg-light-primary dark:bg-dark-primary border-light-secondary dark:border-dark-secondary p-0" hideCloseButton>
                 <form onSubmit={handleSubmit} className="flex flex-col flex-1">
                   <div className="px-6 pt-6 pb-4">
                     <h3 className="text-black/90 dark:text-white/90 font-medium text-sm">
@@ -204,11 +189,8 @@ const AddMCPServer = ({
                     </button>
                   </div>
                 </form>
-              </DialogPanel>
-            </motion.div>
-          </Dialog>
-        )}
-      </AnimatePresence>
+        </DialogContent>
+      </Dialog>
     </>
   );
 };

@@ -1,25 +1,15 @@
 'use client';
 
 import { History, ClockIcon, Trash } from 'lucide-react';
-import {
-  Popover,
-  PopoverButton,
-  PopoverPanel,
-  Transition,
-  Dialog,
-  DialogBackdrop,
-  DialogPanel,
-  DialogTitle,
-  Description,
-  TransitionChild,
-} from '@headlessui/react';
-import { Fragment, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSession } from '@/lib/hooks/useSession';
 import { getGuestChats, deleteGuestChat } from '@/lib/guestStorage';
 import { Chat } from '@/app/library/page';
 import { formatTimeDifference } from '@/lib/utils';
 import Link from 'next/link';
 import { toast } from 'sonner';
+import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover';
+import { Dialog, DialogContent, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 
 interface HistoryDropdownProps {
   position?: 'top' | 'bottom';
@@ -102,35 +92,19 @@ const HistoryDropdown = ({ position = 'bottom', align = 'right' }: HistoryDropdo
     }
   };
 
-  const panelPositionClasses = position === 'top'
-    ? 'bottom-full mb-2'
-    : 'mt-2';
-
-  const panelAlignClasses = align === 'left'
-    ? 'left-0 origin-top-left'
-    : align === 'center'
-    ? 'left-1/2 -translate-x-1/2 origin-top'
-    : 'right-0 origin-top-right';
+  const side = position === 'top' ? 'top' : 'bottom';
+  const alignValue = align === 'left' ? 'start' : align === 'center' ? 'center' : 'end';
 
   return (
     <>
-      <Popover className="relative">
-        <PopoverButton className="p-2 rounded-lg hover:bg-secondary transition-colors duration-200 flex items-center gap-1.5">
+      <Popover>
+        <PopoverTrigger className="p-2 rounded-lg hover:bg-secondary transition-colors duration-200 flex items-center gap-1.5">
           <History size={16} className="text-muted-foreground" />
           <span className="text-xs text-muted-foreground hidden sm:inline">
             History
           </span>
-        </PopoverButton>
-        <Transition
-          as={Fragment}
-          enter="transition ease-out duration-200"
-          enterFrom="opacity-0 translate-y-1"
-          enterTo="opacity-100 translate-y-0"
-          leave="transition ease-in duration-150"
-          leaveFrom="opacity-100 translate-y-0"
-          leaveTo="opacity-0 translate-y-1"
-        >
-          <PopoverPanel className={`absolute ${panelPositionClasses} ${panelAlignClasses} w-80 rounded-2xl bg-popover border border-border shadow-xl z-50`}>
+        </PopoverTrigger>
+        <PopoverContent side={side} align={alignValue} className="w-80 rounded-2xl bg-popover border border-border shadow-xl z-50 p-0">
             <div className="p-3">
               <div className="mb-2 pb-2 border-b border-border">
                 <p className="text-xs font-medium text-muted-foreground/80 uppercase tracking-wide">
@@ -205,67 +179,48 @@ const HistoryDropdown = ({ position = 'bottom', align = 'right' }: HistoryDropdo
                 </div>
               )}
             </div>
-          </PopoverPanel>
-        </Transition>
+        </PopoverContent>
       </Popover>
 
       {/* Delete Confirmation Dialog */}
-      <Transition appear show={deleteDialogOpen} as={Fragment}>
-        <Dialog
-          as="div"
-          className="relative z-[100]"
-          onClose={() => {
-            if (!deleting) {
-              setDeleteDialogOpen(false);
-              setChatToDelete(null);
-            }
-          }}
-        >
-          <DialogBackdrop className="fixed inset-0 bg-black/30" />
-          <div className="fixed inset-0 overflow-y-auto">
-            <div className="flex min-h-full items-center justify-center p-4 text-center">
-              <TransitionChild
-                as={Fragment}
-                enter="ease-out duration-200"
-                enterFrom="opacity-0 scale-95"
-                enterTo="opacity-100 scale-100"
-                leave="ease-in duration-100"
-                leaveFrom="opacity-100 scale-100"
-                leaveTo="opacity-0 scale-95"
-              >
-                <DialogPanel className="w-full max-w-md transform rounded-2xl bg-light-secondary dark:bg-dark-secondary border border-light-200 dark:border-dark-200 p-6 text-left align-middle shadow-xl transition-all">
-                  <DialogTitle className="text-lg font-medium leading-6 dark:text-white">
-                    Delete Confirmation
-                  </DialogTitle>
-                  <Description className="text-sm dark:text-white/70 text-black/70">
-                    Are you sure you want to delete this chat?
-                  </Description>
-                  <div className="flex flex-row items-end justify-end space-x-4 mt-6">
-                    <button
-                      onClick={() => {
-                        if (!deleting) {
-                          setDeleteDialogOpen(false);
-                          setChatToDelete(null);
-                        }
-                      }}
-                      className="text-black/50 dark:text-white/50 text-sm hover:text-black/70 hover:dark:text-white/70 transition duration-200"
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      onClick={handleConfirmDelete}
-                      disabled={deleting}
-                      className="text-red-400 text-sm hover:text-red-500 transition duration-200 disabled:opacity-50"
-                    >
-                      {deleting ? 'Deleting...' : 'Delete'}
-                    </button>
-                  </div>
-                </DialogPanel>
-              </TransitionChild>
-            </div>
+      <Dialog
+        open={deleteDialogOpen}
+        onOpenChange={(open) => {
+          if (!open && !deleting) {
+            setDeleteDialogOpen(false);
+            setChatToDelete(null);
+          }
+        }}
+      >
+        <DialogContent className="w-full max-w-md transform rounded-2xl bg-light-secondary dark:bg-dark-secondary border border-light-200 dark:border-dark-200 p-6 text-left align-middle shadow-xl">
+          <DialogTitle className="text-lg font-medium leading-6 dark:text-white">
+            Delete Confirmation
+          </DialogTitle>
+          <DialogDescription className="text-sm dark:text-white/70 text-black/70 mt-2">
+            Are you sure you want to delete this chat?
+          </DialogDescription>
+          <div className="flex flex-row items-end justify-end space-x-4 mt-6">
+            <button
+              onClick={() => {
+                if (!deleting) {
+                  setDeleteDialogOpen(false);
+                  setChatToDelete(null);
+                }
+              }}
+              className="text-black/50 dark:text-white/50 text-sm hover:text-black/70 hover:dark:text-white/70 transition duration-200"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={handleConfirmDelete}
+              disabled={deleting}
+              className="text-red-400 text-sm hover:text-red-500 transition duration-200 disabled:opacity-50"
+            >
+              {deleting ? 'Deleting...' : 'Delete'}
+            </button>
           </div>
-        </Dialog>
-      </Transition>
+        </DialogContent>
+      </Dialog>
     </>
   );
 };

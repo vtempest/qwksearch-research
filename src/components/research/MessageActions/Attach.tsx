@@ -1,10 +1,9 @@
 import { cn } from '@/lib/utils';
 import {
   Popover,
-  PopoverButton,
-  PopoverPanel,
-  Transition,
-} from '@headlessui/react';
+  PopoverTrigger,
+  PopoverContent,
+} from '@/components/ui/popover';
 import {
   CopyPlus,
   File,
@@ -14,7 +13,7 @@ import {
   Plus,
   Trash,
 } from 'lucide-react';
-import { Fragment, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { useChat } from '@/lib/hooks/useChat';
 
 const Attach = () => {
@@ -48,23 +47,14 @@ const Attach = () => {
       <LoaderCircle size={16} className="text-sky-400 animate-spin" />
     </div>
   ) : files.length > 0 ? (
-    <Popover className="relative w-full max-w-[15rem] md:max-w-md lg:max-w-lg">
-      <PopoverButton
+    <Popover>
+      <PopoverTrigger
         type="button"
-        className="active:border-none hover:bg-light-200 hover:dark:bg-dark-200 p-2 rounded-lg focus:outline-none headless-open:text-black dark:headless-open:text-white text-black/50 dark:text-white/50 active:scale-95 transition duration-200 hover:text-black dark:hover:text-white"
+        className="active:border-none hover:bg-light-200 hover:dark:bg-dark-200 p-2 rounded-lg focus:outline-none data-[state=open]:text-black dark:data-[state=open]:text-white text-black/50 dark:text-white/50 active:scale-95 transition duration-200 hover:text-black dark:hover:text-white"
       >
         <File size={16} className="text-sky-400" />
-      </PopoverButton>
-      <Transition
-        as={Fragment}
-        enter="transition ease-out duration-150"
-        enterFrom="opacity-0 translate-y-1"
-        enterTo="opacity-100 translate-y-0"
-        leave="transition ease-in duration-150"
-        leaveFrom="opacity-100 translate-y-0"
-        leaveTo="opacity-0 translate-y-1"
-      >
-        <PopoverPanel className="absolute z-10 w-64 md:w-[350px] right-0">
+      </PopoverTrigger>
+      <PopoverContent align="end" className="w-64 md:w-[350px] p-0">
           <div className="bg-light-primary dark:bg-dark-primary border rounded-md border-light-200 dark:border-dark-200 w-full max-h-[200px] md:max-h-none overflow-y-auto flex flex-col">
             <div className="flex flex-row items-center justify-between px-3 py-2">
               <h4 className="text-black dark:text-white font-medium text-sm">
@@ -123,15 +113,14 @@ const Attach = () => {
               ))}
             </div>
           </div>
-        </PopoverPanel>
-      </Transition>
+      </PopoverContent>
     </Popover>
   ) : (
     <button
       type="button"
       onClick={() => fileInputRef.current.click()}
       className={cn(
-        'flex items-center justify-center active:border-none hover:bg-light-200 hover:dark:bg-dark-200 p-2 rounded-lg focus:outline-none headless-open:text-black dark:headless-open:text-white text-black/50 dark:text-white/50 active:scale-95 transition duration-200 hover:text-black dark:hover:text-white',
+        'flex items-center justify-center active:border-none hover:bg-light-200 hover:dark:bg-dark-200 p-2 rounded-lg focus:outline-none text-black/50 dark:text-white/50 active:scale-95 transition duration-200 hover:text-black dark:hover:text-white',
       )}
     >
       <input

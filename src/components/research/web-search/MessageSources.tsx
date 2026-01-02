@@ -1,14 +1,12 @@
 /* eslint-disable @next/next/no-img-element */
-import {
-  Dialog,
-  DialogPanel,
-  DialogTitle,
-  Transition,
-  TransitionChild,
-} from '@headlessui/react';
 import { Document } from '@langchain/core/documents';
 import { File } from 'lucide-react';
-import { Fragment, useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import ArticleExtractPanel from './ArticleExtractPanel';
 import { useExtractPanel } from '@/contexts/ExtractPanelContext';
 
@@ -136,23 +134,11 @@ const MessageSources = ({ sources }: { sources: Document[] }) => {
         </button>
       )}
       </div>
-      <Transition appear show={isDialogOpen} as={Fragment}>
-        <Dialog as="div" className="relative z-50" onClose={closeModal}>
-          <div className="fixed inset-0 overflow-y-auto">
-            <div className="flex min-h-full items-center justify-center p-4 text-center">
-              <TransitionChild
-                as={Fragment}
-                enter="ease-out duration-200"
-                enterFrom="opacity-0 scale-95"
-                enterTo="opacity-100 scale-100"
-                leave="ease-in duration-100"
-                leaveFrom="opacity-100 scale-200"
-                leaveTo="opacity-0 scale-95"
-              >
-                <DialogPanel className="w-full max-w-md transform rounded-2xl bg-light-secondary dark:bg-dark-secondary border border-light-200 dark:border-dark-200 p-6 text-left align-middle shadow-xl transition-all">
-                  <DialogTitle className="text-lg font-medium leading-6 dark:text-white">
-                    Sources
-                  </DialogTitle>
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogContent className="w-full max-w-md rounded-2xl bg-light-secondary dark:bg-dark-secondary border border-light-200 dark:border-dark-200">
+          <DialogTitle className="text-lg font-medium leading-6 dark:text-white">
+            Sources
+          </DialogTitle>
                   <div className="grid grid-cols-2 gap-2 overflow-auto max-h-[300px] mt-2 pr-2">
                     {sources.map((source, i) => (
                       <a
@@ -194,12 +180,8 @@ const MessageSources = ({ sources }: { sources: Document[] }) => {
                       </a>
                     ))}
                   </div>
-                </DialogPanel>
-              </TransitionChild>
-            </div>
-          </div>
-        </Dialog>
-      </Transition>
+        </DialogContent>
+      </Dialog>
 
       <ArticleExtractPanel onClose={handleClosePanel} />
     </>

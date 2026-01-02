@@ -4,11 +4,10 @@ import { Cpu, Loader2, Search } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
   Popover,
-  PopoverButton,
-  PopoverPanel,
-  Transition,
-} from '@headlessui/react';
-import { Fragment, useEffect, useMemo, useState } from 'react';
+  PopoverTrigger,
+  PopoverContent,
+} from '@/components/ui/popover';
+import { useEffect, useMemo, useState } from 'react';
 import { MinimalProvider } from '@/lib/research/models/types';
 import { useChat } from '@/lib/hooks/useChat';
 
@@ -78,23 +77,14 @@ const ModelSelector = () => {
     .filter((provider) => provider.chatModels.length > 0);
 
   return (
-    <Popover className="relative w-full max-w-[15rem] md:max-w-md lg:max-w-lg">
-      <PopoverButton
+    <Popover>
+      <PopoverTrigger
         type="button"
-        className="active:border-none hover:bg-light-200  hover:dark:bg-dark-200 p-2 rounded-lg focus:outline-none headless-open:text-black dark:headless-open:text-white text-black/50 dark:text-white/50 active:scale-95 transition duration-200 hover:text-black dark:hover:text-white"
+        className="active:border-none hover:bg-light-200  hover:dark:bg-dark-200 p-2 rounded-lg focus:outline-none data-[state=open]:text-black dark:data-[state=open]:text-white text-black/50 dark:text-white/50 active:scale-95 transition duration-200 hover:text-black dark:hover:text-white"
       >
         <Cpu size={16} className="text-sky-500" />
-      </PopoverButton>
-      <Transition
-        as={Fragment}
-        enter="transition ease-out duration-100"
-        enterFrom="opacity-0 translate-y-1"
-        enterTo="opacity-100 translate-y-0"
-        leave="transition ease-in duration-100"
-        leaveFrom="opacity-100 translate-y-0"
-        leaveTo="opacity-0 translate-y-1"
-      >
-        <PopoverPanel className="absolute z-10 w-[230px] sm:w-[270px] md:w-[300px] -right-4">
+      </PopoverTrigger>
+      <PopoverContent align="end" className="w-[230px] sm:w-[270px] md:w-[300px] p-0">
           <div className="bg-light-primary dark:bg-dark-primary max-h-[300px] sm:max-w-none border rounded-lg border-light-200 dark:border-dark-200 w-full flex flex-col shadow-lg overflow-hidden">
             <div className="p-4 border-b border-light-200 dark:border-dark-200">
               <div className="relative">
@@ -190,8 +180,7 @@ const ModelSelector = () => {
               )}
             </div>
           </div>
-        </PopoverPanel>
-      </Transition>
+      </PopoverContent>
     </Popover>
   );
 };
