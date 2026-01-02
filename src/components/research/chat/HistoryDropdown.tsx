@@ -98,7 +98,7 @@ const HistoryDropdown = ({ position = 'bottom', align = 'right' }: HistoryDropdo
   return (
     <>
       <Popover>
-        <PopoverTrigger className="p-2 rounded-lg bg-secondary/80 hover:bg-secondary transition-colors duration-200 flex items-center gap-1.5 border border-border/50">
+        <PopoverTrigger className="p-2 rounded-lg bg-secondary hover:bg-secondary/70 transition-colors duration-200 flex items-center gap-1.5 border border-border/50">
           <History size={16} className="text-foreground" />
           <span className="text-xs text-foreground hidden sm:inline">
             History
