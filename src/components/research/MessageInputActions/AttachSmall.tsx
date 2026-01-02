@@ -1,10 +1,9 @@
 import { cn } from '@/lib/utils';
 import {
   Popover,
-  PopoverButton,
-  PopoverPanel,
-  Transition,
-} from '@headlessui/react';
+  PopoverTrigger,
+  PopoverContent,
+} from '@/components/ui/popover';
 import {
   CopyPlus,
   File,
@@ -13,7 +12,7 @@ import {
   Plus,
   Trash,
 } from 'lucide-react';
-import { Fragment, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { File as FileType } from '../chat/ChatWindow';
 import { useChat } from '@/lib/hooks/useChat';
 
@@ -48,23 +47,14 @@ const AttachSmall = () => {
       <LoaderCircle size={20} className="text-sky-400 animate-spin" />
     </div>
   ) : files.length > 0 ? (
-    <Popover className="max-w-[15rem] md:max-w-md lg:max-w-lg">
-      <PopoverButton
+    <Popover>
+      <PopoverTrigger
         type="button"
         className="flex flex-row items-center justify-between space-x-1 p-1 text-black/50 dark:text-white/50 rounded-xl hover:bg-light-secondary dark:hover:bg-dark-secondary active:scale-95 transition duration-200 hover:text-black dark:hover:text-white"
       >
         <File size={20} className="text-sky-400" />
-      </PopoverButton>
-      <Transition
-        as={Fragment}
-        enter="transition ease-out duration-150"
-        enterFrom="opacity-0 translate-y-1"
-        enterTo="opacity-100 translate-y-0"
-        leave="transition ease-in duration-150"
-        leaveFrom="opacity-100 translate-y-0"
-        leaveTo="opacity-0 translate-y-1"
-      >
-        <PopoverPanel className="absolute z-10 w-64 md:w-[350px] bottom-14 -ml-3">
+      </PopoverTrigger>
+      <PopoverContent side="top" align="start" className="w-64 md:w-[350px] p-0">
           <div className="bg-light-primary dark:bg-dark-primary border rounded-md border-light-200 dark:border-dark-200 w-full max-h-[200px] md:max-h-none overflow-y-auto flex flex-col">
             <div className="flex flex-row items-center justify-between px-3 py-2">
               <h4 className="text-black dark:text-white font-medium text-sm">
@@ -123,8 +113,7 @@ const AttachSmall = () => {
               ))}
             </div>
           </div>
-        </PopoverPanel>
-      </Transition>
+      </PopoverContent>
     </Popover>
   ) : (
     <button
